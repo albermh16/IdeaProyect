@@ -6,7 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet("/cabeceras-request")
+@WebServlet("/cabeceraReq")
 public class CabeceraRequestServlet extends HttpServlet {
     private String message;
 
@@ -29,58 +29,22 @@ public class CabeceraRequestServlet extends HttpServlet {
         String url = scheme + "://" + host + contextPath + servletPath;
         String url2 = scheme + "://" + ipLocal + ":" + port + contextPath + servletPath;
 
-        try (PrintWriter out = resp.getWriter()) {
 
-            // Encabezado HTML usando literal template
-            out.println("""
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Cabeceras HTTP Request</title>
-            </head>
-            <body>
-                <h1>Cabeceras HTTP Request</h1>
-                <ul>
-            """);
+        req.setAttribute("metodoHttp", metodoHttp);
+        req.setAttribute("requestUri", requestUri);
+        req.setAttribute("requestUrl", requestUrl);
+        req.setAttribute("contextPath", contextPath);
+        req.setAttribute("servletPath", servletPath);
+        req.setAttribute("ipCliente", ipCliente);
+        req.setAttribute("ipLocal", ipLocal);
+        req.setAttribute("port", port);
+        req.setAttribute("scheme", scheme);
+        req.setAttribute("host", host);
+        req.setAttribute("url", url);
+        req.setAttribute("url2", url2);
 
-            // Lista de información básica de la solicitud
-            String infoHtml = """
-            <li>Metodo HTTP: %s</li>
-            <li>Request URI: %s</li>
-            <li>Request URL: %s</li>
-            <li>Context Path: %s</li>
-            <li>Servlet Path: %s</li>
-            <li>IP local: %s</li>
-            <li>IP cliente: %s</li>
-            <li>Puerto local: %d</li>
-            <li>Scheme: %s</li>
-            <li>Host: %s</li>
-            <li>URL: %s</li>
-            <li>URL2: %s</li>
-            """.formatted(metodoHttp, requestUri, requestUrl, contextPath, servletPath,
-                    ipLocal, ipCliente, port, scheme, host, url, url2);
+        req.getRequestDispatcher("cabeceraReq.jsp").forward(req, resp);
 
-            out.println(infoHtml);
-
-            // Headers HTTP usando streams para mayor legibilidad
-            out.println(
-                    java.util.Collections.list(req.getHeaderNames()).stream()
-                            .map(name -> "<li>" + name + ": " + req.getHeader(name) + "</li>")
-                            .reduce("", String::concat)
-            );
-
-            // Cierre del HTML
-            out.println("""
-                </ul>
-            </body>
-            </html>
-            """);
         }
     }
 
-    @Override
-    public void destroy() {
-        super.destroy();
-    }
-}
