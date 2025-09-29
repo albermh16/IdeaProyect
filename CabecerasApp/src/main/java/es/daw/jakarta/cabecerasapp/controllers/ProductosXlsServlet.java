@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Logger;
 
 @WebServlet({"/productos.xls", "/productos.html", "/productos"})
 public class ProductosXlsServlet extends HttpServlet {
@@ -22,6 +23,8 @@ public class ProductosXlsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         List<Producto> productos = service.listar();
+
+
 
         String servletPath = req.getServletPath();
         if (servletPath.endsWith(".xls")) {
