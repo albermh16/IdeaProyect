@@ -4,7 +4,6 @@
 <head>
     <title>Cookie</title>
 </head>
-<body>
 <%
     String color = "#ffffff";
     final String COOKIE_NAME = "colorFondo"; // pendiente final static en JSP ???????
@@ -18,6 +17,8 @@
         }
     }
 %>
+<body style="background-color: <%=color%>">
+
 <h1><%= "Bienvenido" %>
 </h1>
 <br/>
@@ -25,7 +26,7 @@
 <p>Quieres cambiar el color de fondo?</p>
 <ul>
     <li><a href="color.jsp">Si, cambiar color</a></li>
-    <li><a href="preferencias">Borrar la preferencia </a></li>
+    <li><a href="preferencias?accion=borrar">Borrar la preferencia </a></li>
 </ul>
 
 </body>
