@@ -39,7 +39,7 @@
             </thead>
             <tbody>
 
-            <!--Pendiente de completar-->
+
 
             </tbody>
         </table>

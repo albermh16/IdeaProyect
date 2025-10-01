@@ -20,7 +20,6 @@ public class HelloServlet extends HttpServlet {
 
         if (USERNAME.equals(login) && PASSWORD.equals(password)) {
 
-
             req.setAttribute("usuario", login);
             req.getRequestDispatcher("success.jsp").forward(req, res);
 

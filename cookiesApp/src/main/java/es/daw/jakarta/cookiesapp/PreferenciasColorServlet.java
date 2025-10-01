@@ -23,7 +23,7 @@ public class PreferenciasColorServlet extends HttpServlet {
             }
         }
 
-        response.sendRedirect(request.getContextPath() + "/login");
+        response.sendRedirect(request.getContextPath() + "/index.jsp");
 
     }
 
@@ -33,7 +33,7 @@ public class PreferenciasColorServlet extends HttpServlet {
         String color = request.getParameter("color");
 
 
-        if (color == null && color.isBlank()) {
+        if (color != null && !color.isBlank()) {
             // Crear una cookie
             Cookie cookie = new Cookie(COOKIE_NAME, color);
             // Establecer tiempo de expiración en 7 días

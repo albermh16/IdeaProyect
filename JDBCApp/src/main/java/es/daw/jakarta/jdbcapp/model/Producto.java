@@ -10,6 +10,7 @@ public class Producto {
     // coma flotante pierde presion
     private BigDecimal precio;
     private Integer codigo_fabricante;
+    private String nombre_fabricante;
 
     public Producto() {
     }
@@ -51,6 +52,14 @@ public class Producto {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getNombre_fabricante() {
+        return nombre_fabricante;
+    }
+
+    public void setNombre_fabricante(String nombre_fabricante) {
+        this.nombre_fabricante = nombre_fabricante;
     }
 
     @Override
