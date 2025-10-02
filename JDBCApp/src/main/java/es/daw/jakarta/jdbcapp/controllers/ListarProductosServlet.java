@@ -1,36 +1,62 @@
 package es.daw.jakarta.jdbcapp.controllers;
 
 import java.io.*;
-import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+import es.daw.jakarta.jdbcapp.model.Producto;
 import es.daw.jakarta.jdbcapp.repository.DBConnection;
+import es.daw.jakarta.jdbcapp.repository.GenericDAO;
+import es.daw.jakarta.jdbcapp.repository.ProductoDAO;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet("/productos/ver")
+@WebServlet(name = "ListarProductosServlet", value = "/productos/ver")
 public class ListarProductosServlet extends HttpServlet {
-    private static final Logger log = Logger.getLogger(ListarProductosServlet.class.getName());
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private static final Logger log =  Logger.getLogger(ListarProductosServlet.class.getName());
 
-        Connection conexion = null;
+    // listar productos
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        List<Producto> productos = new ArrayList<>(); // no es nula, está vacía
+        try {
+            GenericDAO<Producto,Integer> daoP = new ProductoDAO();
 
-        try{
-            conexion = DBConnection.getConnection();
-            log.info("* CONENECTION: " + conexion);
-        } catch (SQLException e){
-            log.severe("* ERROR: " + e.getMessage());
+            productos = daoP.findAll();
 
-            throw new RuntimeException(e);
+            //productos.forEach(System.out::println);
+            productos.forEach(p -> log.info(p.toString()));
+
+        } catch (SQLException e) {
+            //throw new RuntimeException(e);
+            log.severe(e.getMessage());
+            request.setAttribute("error", e.getMessage());
+            getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
         }
 
+        // SALIDA HTML
+        request.setAttribute("productos", productos);
+        getServletContext().getRequestDispatcher("/informe.jsp").forward(request, response);
 
     }
+
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            DBConnection.closeConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e); // el server devolvería 500
+            // OBSERVACIÓN....
+            // QUIERO REUTILIZAR ERROR.JSP PARA ENVIAR e.getMesage()
+        }
     }
 }

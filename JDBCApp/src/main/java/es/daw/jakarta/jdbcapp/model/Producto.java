@@ -1,25 +1,44 @@
 package es.daw.jakarta.jdbcapp.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Producto {
+/**
+ * Un JavaBean debe tener un constructor sin argumentos.
+ * Tiene declarados todos sus atributos como privados y para cada uno de ellos un método setter y
+ * getter. Deben ser serializables. Mediante estos JavaBeans, desarrollamos
+ * nuestro modelo de objetos (o modelo de dominio) para la aplicación.
+ *
+ *
+ * CURIOSIDAD: POJO son las iniciales de "Plain Old Java Object", que puede
+ * interpretarse como "Un objeto Java Plano Antiguo".
+ * Clase con atributos y constructores... POJO.
+ *
+ */
 
+// PENDIENTE!!! REVISAR INTERFACE SERIALIZABLE .....
+public class Producto implements Serializable {
     private Integer codigo;
     private String nombre;
-    // Decimales para precio no recomendable por que son binarios en coma flotante
-    // coma flotante pierde presion
+    // los decimales para precio: no es recomendable ni float ni double porque son binarios en coma flotante
+    // coma flotante pierde presión
+    /*
+        Beneficios de BigDecimal:
+            Maneja decimales exactos.
+            Ideal para dinero o cantidades con precisión.
+            JDBC mapea automáticamente DECIMAL ↔ BigDecimal.
+     */
     private BigDecimal precio;
     private Integer codigo_fabricante;
-    private String nombre_fabricante;
 
-    public Producto() {
+    public Producto(Integer codigo, String nombre, BigDecimal precio, Integer codigo_fabricante) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.precio = precio;
+        this.codigo_fabricante = codigo_fabricante;
     }
 
-    public Producto(Integer codigo, Integer codigo_fabricante, BigDecimal precio, String nombre) {
-        this.codigo = codigo;
-        this.codigo_fabricante = codigo_fabricante;
-        this.precio = precio;
-        this.nombre = nombre;
+    public Producto() {
     }
 
     public Integer getCodigo() {
@@ -30,12 +49,12 @@ public class Producto {
         this.codigo = codigo;
     }
 
-    public Integer getCodigo_fabricante() {
-        return codigo_fabricante;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setCodigo_fabricante(Integer codigo_fabricante) {
-        this.codigo_fabricante = codigo_fabricante;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public BigDecimal getPrecio() {
@@ -46,20 +65,12 @@ public class Producto {
         this.precio = precio;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Integer getCodigo_fabricante() {
+        return codigo_fabricante;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getNombre_fabricante() {
-        return nombre_fabricante;
-    }
-
-    public void setNombre_fabricante(String nombre_fabricante) {
-        this.nombre_fabricante = nombre_fabricante;
+    public void setCodigo_fabricante(Integer codigo_fabricante) {
+        this.codigo_fabricante = codigo_fabricante;
     }
 
     @Override
