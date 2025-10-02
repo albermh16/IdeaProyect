@@ -36,4 +36,6 @@ public interface GenericDAO<T, ID> {
 
     // DELETE
     void delete(ID id) throws SQLException;
+
+    // PENDIENTE!!! DECIDIR SI DECLARO UN MÉTODO ABSTRACTO PARA HACER findByNombre!!!
 }

@@ -20,7 +20,12 @@ public class ProductoDAO implements GenericDAO<Producto,Integer>{
     @Override
     public void save(Producto entity) throws SQLException {
         // Si queremos controlar que el código del nuevo producto (entity) no esté duplicado antes de insertar...
-        // ???????? PA MAÑANA!!!!
+        // Forma 1: consultar sql si existe el código findById. Si no devuelve nada, no existe, si devuelve un reg, exite...
+        // Llamaría a findById desde el servlet
+        // Forma 2: sql con insert if not exist... qué devuelve la BD si ya existe el código???
+        // Forma 3: recogiendo la excepción de la BD  (LA QUE VAMOS A HACER AHORA)
+        // Forma 4: hacemos findAll y busco en la lista si existe un producto con ese código... contains!!!
+        // Obligatoriamente debo implementar equals/hashcode en Producto y creo un Producto nuevo solo con dicho código...
 
         String sql = "insert into producto (codigo,nombre, precio,codigo_fabricante) values (?,?,?,?)";
         try(PreparedStatement ps = conn.prepareStatement(sql)){
@@ -37,13 +42,24 @@ public class ProductoDAO implements GenericDAO<Producto,Integer>{
     @Override
     public Optional<Producto> findById(Integer id) throws SQLException {
 
-//        String sql = "SELECT * FROM producto WHERE codigo = ?";
-//
-//        try(PreparedStatement ps = conn.prepareStatement(sql)){
-//            ps.setInt(1,id);
-//            ......
-//        }
+        String sql = "SELECT * FROM producto WHERE codigo = ?";
+
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1,id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                Producto producto = new Producto(
+                        rs.getInt("codigo"),
+                        rs.getString("nombre"),
+                        rs.getBigDecimal("precio"),
+                        rs.getInt("codigo_fabricante")
+                );
+                return Optional.of(producto);
+            }
+        }
+
         return Optional.empty();
+
 
     }
 
@@ -73,13 +89,30 @@ public class ProductoDAO implements GenericDAO<Producto,Integer>{
 
     @Override
     public void update(Producto entity) throws SQLException {
+        String sql = "UPDATE producto SET  nombre=?, precio=?, codigo_fabricante=? WHERE codigo=?";
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1, entity.getNombre());
+            ps.setBigDecimal(2, entity.getPrecio());
+            ps.setInt(3, entity.getCodigo_fabricante());
+            ps.setInt(4, entity.getCodigo());
+
+            ps.executeUpdate();
+        }
 
     }
 
     @Override
-    public void delete(Integer integer) throws SQLException {
+    public void delete(Integer codigo) throws SQLException {
+        try(PreparedStatement ps = conn.prepareStatement("DELETE FROM producto WHERE codigo = ?")){
+            ps.setInt(1, codigo);
+            ps.executeUpdate();
+        }
 
     }
-
+    // -----------------------------
     // PENDIENTE!!! Puedo crear los métodos que me de la gana como findByName...
+    // Creo findByName en el caso de que no lo declare en la interface
+    // En cualquier caso debo implementarlo aquí!!!!
+
+
 }

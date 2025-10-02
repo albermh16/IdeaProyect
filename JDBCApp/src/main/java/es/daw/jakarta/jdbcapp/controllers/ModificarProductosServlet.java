@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,16 +25,52 @@ public class ModificarProductosServlet extends HttpServlet {
 
     // listar productos
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        //List<Producto> productos = new ArrayList<>(); // no es nula, está vacía
+        // -----------------------------
+        // Leer parámetros.... cuidadín si no valido los nulos, blancos o cosas no deseadas
+        // HACER LAS COMPROBACIONES OPORTUNAS!!!
+        String codigo = request.getParameter("codigo") == null || request.getParameter("codigo").isBlank()? "" : request.getParameter("codigo");
+        String nombre = request.getParameter("nombre");
+        String codigo_fabricante = request.getParameter("codigo_fabricante");
+        String precio = request.getParameter("precio");
 
-        // Leer parámetros....
+        // El mismo Servlet se encarga de insertar, borrar y actualizar
+        // Vendrá con valores insert, update, y delate...
+        String operacion =  request.getParameter("operacion");
+
+        // Para borrar el código se mete en otro input
+        String codigoBorrar = request.getParameter("codigoBorrar");
+
+        try{
+            BigDecimal precioDecimal=new BigDecimal(precio);
+        }catch(NumberFormatException ex){
+            //request.setAttribute("error", ex.getMessage());
+            request.setAttribute("error", "Has escrito mal el precio. Debe contener números y decimales con punto!!! ej: 1500.80");
+            getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+            //response.sendRedirect("/error.jsp");
+        }
+
+        log.info("************** PASO!!!");// RARUNO RARUNO... PASA!!!!
+
+
+        // ----------------------------------------
 
         try {
             GenericDAO<Producto,Integer> daoP = new ProductoDAO();
 
-            //productos = daoP.findAll();
-            Producto nuevoProducto = new Producto();
-            daoP.save(nuevoProducto);
+            // Damos por hecho que todos los parámetros vienen correctamente....
+            Producto nuevoProducto = new Producto(
+                    Integer.parseInt(codigo),
+                    nombre,
+                    new BigDecimal(precio),
+                    Integer.parseInt(codigo_fabricante));
+
+            // Depende de la operación hago una cosa u otra
+            switch (operacion) {
+                case "insert" -> daoP.save(nuevoProducto);
+                case "update" -> daoP.update(nuevoProducto);
+                case "delete" -> daoP.delete(Integer.parseInt(codigoBorrar));
+            }
+
 
 
         } catch (SQLException e) {
@@ -52,6 +89,7 @@ public class ModificarProductosServlet extends HttpServlet {
             out.println("<title>Servlet ModificarProductosServlet</title>");
             out.println("</head>");
             out.println("<body>");
+            // Este mensaje depende de la operación realizada!!!! PENDIENTE!!
             out.println("<h1>Insertado producto correctamente!!!</h1>");
             out.println("</body>");
         }
@@ -63,6 +101,7 @@ public class ModificarProductosServlet extends HttpServlet {
 
     @Override
     public void destroy() {
+        log.info("Destroy!!!!!!!!!!!!!1");
         try {
             DBConnection.closeConnection();
         } catch (SQLException e) {
