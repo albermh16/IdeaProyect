@@ -2,6 +2,7 @@ package es.daw.jakarta.jdbcapp.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * Un JavaBean debe tener un constructor sin argumentos.
@@ -81,5 +82,17 @@ public class Producto implements Serializable {
                 ", precio=" + precio +
                 ", codigo_fabricante=" + codigo_fabricante +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Producto producto = (Producto) o;
+        return Objects.equals(codigo, producto.codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(codigo);
     }
 }

@@ -35,8 +35,11 @@ public class ProductoDAO implements GenericDAO<Producto,Integer>{
             ps.setInt(4, entity.getCodigo_fabricante());
 
             ps.executeUpdate();
+        }catch(SQLException e){
+            if("23505".equals(e.getSQLState())){
+                throw new SQLException("No se pudo añadir. Ya existe un producto con el codigo: " + entity.getCodigo(), e);
+            }
         }
-
     }
 
     @Override
@@ -57,9 +60,7 @@ public class ProductoDAO implements GenericDAO<Producto,Integer>{
                 return Optional.of(producto);
             }
         }
-
         return Optional.empty();
-
 
     }
 
@@ -84,8 +85,8 @@ public class ProductoDAO implements GenericDAO<Producto,Integer>{
             }
         }
         return productos;
-
     }
+
 
     @Override
     public void update(Producto entity) throws SQLException {
@@ -109,10 +110,29 @@ public class ProductoDAO implements GenericDAO<Producto,Integer>{
         }
 
     }
+
     // -----------------------------
     // PENDIENTE!!! Puedo crear los métodos que me de la gana como findByName...
     // Creo findByName en el caso de que no lo declare en la interface
     // En cualquier caso debo implementarlo aquí!!!!
 
+    public List<Producto> findByName(String name) throws SQLException {
+        List<Producto> productos = new ArrayList<>();
+        String sql = "SELECT * FROM producto WHERE nombre = ?";
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Producto producto = new Producto(
+                        rs.getInt("codigo"),
+                        rs.getString("nombre"),
+                        rs.getBigDecimal("precio"),
+                        rs.getInt("codigo_fabricante")
+                );
+                productos.add(producto);
+            }
+        }
+        return productos;
+    }
 
 }
