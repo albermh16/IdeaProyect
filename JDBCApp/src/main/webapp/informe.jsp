@@ -22,10 +22,12 @@
     </style>
 </head>
 <body class="bg-light">
+
 <%
     List<Producto> productos = (List<Producto>)request.getAttribute("productos");
     if (productos != null && !productos.isEmpty()){
 %>
+
 <div class="container mt-5">
     <h2 class="mb-4 text-primary">📋 Productos disponibles</h2>
 

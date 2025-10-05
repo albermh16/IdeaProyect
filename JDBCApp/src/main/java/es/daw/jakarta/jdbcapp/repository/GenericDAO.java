@@ -39,11 +39,6 @@ public interface GenericDAO<T, ID> {
     // DELETE
     void delete(ID id) throws SQLException;
 
-    // -----------------------------
-    // PENDIENTE!!! Puedo crear los métodos que me de la gana como findByName...
-    // Creo findByName en el caso de que no lo declare en la interface
-    // En cualquier caso debo implementarlo aquí!!!!
-    List<Producto> findByName(String name) throws SQLException;
 
     // PENDIENTE!!! DECIDIR SI DECLARO UN MÉTODO ABSTRACTO PARA HACER findByNombre!!!
 }

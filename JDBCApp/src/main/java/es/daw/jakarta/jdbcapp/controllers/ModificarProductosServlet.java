@@ -40,45 +40,62 @@ public class ModificarProductosServlet extends HttpServlet {
         // Para borrar el código se mete en otro input
         String codigoBorrar = request.getParameter("codigoBorrar");
 
-        try{
-            BigDecimal precioDecimal=new BigDecimal(precio);
-        }catch(NumberFormatException ex){
-            //request.setAttribute("error", ex.getMessage());
-            request.setAttribute("error", "Has escrito mal el precio. Debe contener números y decimales con punto!!! ej: 1500.80");
-            getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
-            //response.sendRedirect("/error.jsp");
-        }
-
-        log.info("************** PASO!!!");// RARUNO RARUNO... PASA!!!!
-
-
-        // ----------------------------------------
-
+        List<Producto> productos = new ArrayList<>();
         try {
-            GenericDAO<Producto,Integer> daoP = new ProductoDAO();
+            GenericDAO<Producto, Integer> daoP = new ProductoDAO();
 
-            // Damos por hecho que todos los parámetros vienen correctamente....
-            Producto nuevoProducto = new Producto(
-                    Integer.parseInt(codigo),
-                    nombre,
-                    new BigDecimal(precio),
-                    Integer.parseInt(codigo_fabricante));
 
-            // Depende de la operación hago una cosa u otra
-            switch (operacion) {
-                case "insert" -> daoP.save(nuevoProducto);
-                case "update" -> daoP.update(nuevoProducto);
-                case "delete" -> daoP.delete(Integer.parseInt(codigoBorrar));
+            switch(operacion){
+                case "insert":
+                    try{
+                        BigDecimal precioBig = new BigDecimal(precio);
+                        Producto nuevoProd = new Producto(
+                                Integer.parseInt(codigo),
+                                nombre,
+                                precioBig,
+                                Integer.parseInt(codigo_fabricante)
+                        );
+                        daoP.save(nuevoProd);
+                    }catch(NumberFormatException e){
+                        request.setAttribute("error", "Has escrito mal el precio. Debe contener numeros, y si contuviese decimales con punto. Ej: 120.50");
+                        getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+                    }
+                    break;
+
+                case "update":
+                    try{
+                        BigDecimal precioBig = new BigDecimal(precio);
+                        Producto nuevoProd = new Producto(
+                                Integer.parseInt(codigo),
+                                nombre,
+                                precioBig,
+                                Integer.parseInt(codigo_fabricante)
+                        );
+                        daoP.update(nuevoProd);
+                    }catch(NumberFormatException e){
+                        request.setAttribute("error", "Has escrito mal el precio. Debe contener numeros, y si contuviese decimales con punto. Ej: 120.50");
+                        getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+                    }
+                    break;
+
+                case "delete":
+                    try{
+                        daoP.delete(Integer.parseInt(codigo));
+                    }catch(NumberFormatException e){
+                        request.setAttribute("error", "Debes indicar un codigo para borrar");
+                        getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+                    }
             }
-
-
+            productos = daoP.findAll();
 
         } catch (SQLException e) {
-            //throw new RuntimeException(e);
-            log.severe(e.getMessage());
-            request.setAttribute("error", e.getMessage());
-            getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
+            throw new RuntimeException(e);
         }
+
+
+
+        request.setAttribute("productos", productos);
+        getServletContext().getRequestDispatcher("/informe.jsp").forward(request, response);
 
         // SALIDA
         //request.setAttribute("productos", productos);
@@ -96,8 +113,6 @@ public class ModificarProductosServlet extends HttpServlet {
 
 
     }
-
-
 
     @Override
     public void destroy() {
