@@ -12,12 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class FabricanteDAO implements GenericDAO<Fabricante, Integer> {
-
     private Connection conn;
 
-   public FabricanteDAO(Connection conn) throws SQLException {
-       conn= DBConnection.getConnection();
-   }
+    public FabricanteDAO() throws SQLException {
+        conn= DBConnection.getConnection();
+    }
 
     @Override
     public void save(Fabricante entity) throws SQLException {
@@ -31,8 +30,6 @@ public class FabricanteDAO implements GenericDAO<Fabricante, Integer> {
                 throw new SQLException("El fabricante que intenta insertar ya existe");
             }
         }
-
-
 
     }
 

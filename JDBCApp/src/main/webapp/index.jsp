@@ -1,4 +1,8 @@
-
+<%@ page import="es.daw.jakarta.jdbcapp.model.Fabricante" %>
+<%@ page import="es.daw.jakarta.jdbcapp.repository.GenericDAO" %>
+<%@ page import="es.daw.jakarta.jdbcapp.repository.FabricanteDAO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -72,7 +76,7 @@
 
 </head>
 <body>
-<h1>PRODUCTOS JDBC DAO</h1>
+<h1>PRODUCTOS JDBC DAO v3</h1>
 <form action="productos/ver" target="_blank">
     <fieldset class="fieldset-principal">
         <legend>Listado de productos de la tienda:</legend>
@@ -81,6 +85,17 @@
         <p><input type="submit" value="Obtener listado de productos en formato tabla"/></p>
     </fieldset>
 </form>
+
+<%--<%--%>
+<%--    GenericDAO<Fabricante,Integer> daoF = new FabricanteDAO();--%>
+<%--    List<Fabricante> fabricantes = daoF.findAll();--%>
+<%--%>--%>
+<%
+    List<Fabricante> fabricantes = new ArrayList<>();
+    if (request.getAttribute("fabricantes") != null)
+        fabricantes = (List<Fabricante>)request.getAttribute("fabricantes");
+
+%>
 
 <form action="productos/modificar" method="POST" target="_blank">
     <fieldset class="fieldset-principal">
@@ -93,15 +108,9 @@
         </p>-->
         <label for="departamento">Fabricantes:</label>
         <select name="codigo_fabricante" id="departamento">
-            <option value="1">Asus</option>
-            <option value="2">Lenovo</option>
-            <option value="3">Hewlett-Packard</option>
-            <option value="4">Samsung</option>
-            <option value="5">Seagate</option>
-            <option value="6">Crucial</option>
-            <option value="7">Gigabyte</option>
-            <option value="8">Huawei</option>
-            <option value="9">Xiaomi</option>
+            <% for( Fabricante f: fabricantes) {%>
+            <option value="<%=f.getCodigo()%>"><%=f.getNombre()%></option>
+            <%}%>
         </select>
 
     </fieldset>

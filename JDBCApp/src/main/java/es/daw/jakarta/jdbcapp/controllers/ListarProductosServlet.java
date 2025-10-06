@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import es.daw.jakarta.jdbcapp.model.Fabricante;
 import es.daw.jakarta.jdbcapp.model.Producto;
 import es.daw.jakarta.jdbcapp.repository.DBConnection;
+import es.daw.jakarta.jdbcapp.repository.FabricanteDAO;
 import es.daw.jakarta.jdbcapp.repository.GenericDAO;
 import es.daw.jakarta.jdbcapp.repository.ProductoDAO;
 import jakarta.servlet.ServletException;
@@ -22,9 +24,12 @@ public class ListarProductosServlet extends HttpServlet {
     // listar productos
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         List<Producto> productos = new ArrayList<>(); // no es nula, está vacía
+        List<Fabricante> fabricantes = new ArrayList<>();
         try {
             GenericDAO<Producto,Integer> daoP = new ProductoDAO();
+            GenericDAO<Fabricante,Integer> daoF = new FabricanteDAO();
 
+            fabricantes = daoF.findAll();
             productos = daoP.findAll();
 
             //productos.forEach(System.out::println);
@@ -37,8 +42,11 @@ public class ListarProductosServlet extends HttpServlet {
             getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
         }
 
+
+
         // SALIDA HTML
         request.setAttribute("productos", productos);
+        request.setAttribute("fabricantes", fabricantes);
         getServletContext().getRequestDispatcher("/informe.jsp").forward(request, response);
 
     }

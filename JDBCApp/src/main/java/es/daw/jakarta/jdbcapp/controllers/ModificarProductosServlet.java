@@ -1,7 +1,9 @@
 package es.daw.jakarta.jdbcapp.controllers;
 
+import es.daw.jakarta.jdbcapp.model.Fabricante;
 import es.daw.jakarta.jdbcapp.model.Producto;
 import es.daw.jakarta.jdbcapp.repository.DBConnection;
+import es.daw.jakarta.jdbcapp.repository.FabricanteDAO;
 import es.daw.jakarta.jdbcapp.repository.GenericDAO;
 import es.daw.jakarta.jdbcapp.repository.ProductoDAO;
 import jakarta.servlet.ServletException;
@@ -41,9 +43,10 @@ public class ModificarProductosServlet extends HttpServlet {
         String codigoBorrar = request.getParameter("codigoBorrar");
 
         List<Producto> productos = new ArrayList<>();
+        List<Fabricante> fabricantes = new ArrayList<>();
         try {
             GenericDAO<Producto, Integer> daoP = new ProductoDAO();
-
+            GenericDAO<Fabricante, Integer> daoF = new FabricanteDAO();
 
             switch(operacion){
                 case "insert":
@@ -86,29 +89,17 @@ public class ModificarProductosServlet extends HttpServlet {
                         getServletContext().getRequestDispatcher("/error.jsp").forward(request, response);
                     }
             }
+
             productos = daoP.findAll();
+            fabricantes = daoF.findAll();
+            productos.sort((p1, p2) -> p1.getCodigo().compareTo(p2.getCodigo())); //ORDENACION POR CODIGO ASCENCENTE
+            request.setAttribute("productos", productos);
+            request.setAttribute("fabricantes", fabricantes);
+            request.setAttribute("message", "Operacion<" +operacion+">realizada con exito!");
+            getServletContext().getRequestDispatcher("/informe.jsp").forward(request, response);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-
-
-
-        request.setAttribute("productos", productos);
-        getServletContext().getRequestDispatcher("/informe.jsp").forward(request, response);
-
-        // SALIDA
-        //request.setAttribute("productos", productos);
-        //getServletContext().getRequestDispatcher("/informe.jsp").forward(request,response);
-        try(PrintWriter out = response.getWriter()) {
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ModificarProductosServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            // Este mensaje depende de la operación realizada!!!! PENDIENTE!!
-            out.println("<h1>Insertado producto correctamente!!!</h1>");
-            out.println("</body>");
         }
 
 

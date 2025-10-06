@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="es.daw.jakarta.jdbcapp.model.Producto" %>
 <%@ page import="java.util.List" %>
+<%@ page import="es.daw.jakarta.jdbcapp.model.Fabricante" %>
+<%@ page import="es.daw.jakarta.jdbcapp.util.Utils" %>
 
 <html>
 <head>
@@ -22,13 +24,14 @@
     </style>
 </head>
 <body class="bg-light">
-
 <%
     List<Producto> productos = (List<Producto>)request.getAttribute("productos");
-    if (productos != null && !productos.isEmpty()){
-%>
 
+    if (productos != null && !productos.isEmpty()){
+        List<Fabricante> fabricantes = (List<Fabricante>)request.getAttribute("fabricantes");
+%>
 <div class="container mt-5">
+    <h2>${message}</h2>
     <h2 class="mb-4 text-primary">📋 Productos disponibles</h2>
 
 
@@ -52,7 +55,8 @@
                 <td><%=p.getCodigo()%></td>
                 <td><%=p.getNombre()%></td>
                 <td><%=p.getPrecio()%></td>
-                <td><%=p.getCodigo_fabricante()%></td>
+                <%--                    <td><%=p.getCodigo_fabricante()%></td>--%>
+                <td><%=Utils.obtenerNombreFabricante(fabricantes,p.getCodigo_fabricante())%></td>
             </tr>
             <%}%>
 
