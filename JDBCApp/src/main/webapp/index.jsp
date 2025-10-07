@@ -91,9 +91,11 @@
 <%--    List<Fabricante> fabricantes = daoF.findAll();--%>
 <%--%>--%>
 <%
-    List<Fabricante> fabricantes = new ArrayList<>();
-    if (request.getAttribute("fabricantes") != null)
+    GenericDAO<Fabricante, Integer> daoF = new FabricanteDAO();
+    List<Fabricante> fabricantes = daoF.findAll();
+    if (request.getAttribute("fabricantes") != null){
         fabricantes = (List<Fabricante>)request.getAttribute("fabricantes");
+        }
 
 %>
 

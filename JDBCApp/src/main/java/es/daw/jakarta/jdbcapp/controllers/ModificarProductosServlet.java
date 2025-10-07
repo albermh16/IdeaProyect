@@ -42,8 +42,7 @@ public class ModificarProductosServlet extends HttpServlet {
         // Para borrar el código se mete en otro input
         String codigoBorrar = request.getParameter("codigoBorrar");
 
-        List<Producto> productos = new ArrayList<>();
-        List<Fabricante> fabricantes = new ArrayList<>();
+
         try {
             GenericDAO<Producto, Integer> daoP = new ProductoDAO();
             GenericDAO<Fabricante, Integer> daoF = new FabricanteDAO();
@@ -90,12 +89,13 @@ public class ModificarProductosServlet extends HttpServlet {
                     }
             }
 
-            productos = daoP.findAll();
-            fabricantes = daoF.findAll();
-            productos.sort((p1, p2) -> p1.getCodigo().compareTo(p2.getCodigo())); //ORDENACION POR CODIGO ASCENCENTE
+            List<Producto> productos = daoP.findAll();
+            List<Fabricante> fabricantes = daoF.findAll();
+
+            productos.sort((p1, p2) -> p2.getCodigo().compareTo(p1.getCodigo())); //ORDENACION POR CODIGO ASCENCENTE
             request.setAttribute("productos", productos);
             request.setAttribute("fabricantes", fabricantes);
-            request.setAttribute("message", "Operacion<" +operacion+">realizada con exito!");
+            request.setAttribute("message", "Operacion <" +operacion+">realizada con exito!");
             getServletContext().getRequestDispatcher("/informe.jsp").forward(request, response);
 
         } catch (SQLException e) {
