@@ -1,0 +1,10 @@
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\controllers\IndexServlet.java
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\controllers\ListarProductosServlet.java
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\controllers\ModificarProductosServlet.java
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\model\Fabricante.java
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\model\Producto.java
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\repository\DBConnection.java
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\repository\FabricanteDAO.java
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\repository\GenericDAO.java
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\repository\ProductoDAO.java
+C:\Users\alber\OneDrive\Escritorio\IdeaProject-GitHub\JDBCApp- FASE II\src\main\java\es\daw\jakarta\jdbcapp\util\Utils.java
