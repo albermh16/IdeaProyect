@@ -27,8 +27,11 @@ public class CrearProductoServlet extends HttpServlet {
     private GenericDAO<Fabricante, Integer> fabricanteDAO;
     private GenericDAO<Producto, Integer> productoDAO;
 
+
+
     @Override
     public void init(ServletConfig config) throws ServletException {
+        super.init(config); // Para poder usar getServletContext()
         try {
             fabricanteDAO = new FabricanteDAO();
             productoDAO = new ProductoDAO();

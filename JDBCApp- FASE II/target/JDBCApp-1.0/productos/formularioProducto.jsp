@@ -30,7 +30,7 @@
     boolean esEdicion = producto != null; // true es edición
 
     String titulo = esEdicion? "Editar Producto":"Nuevo Producto";
-    String accion = esEdicion? "actualizar":"crear";
+    String accion = esEdicion? "editar":"crear";
 %>
 
 

@@ -46,12 +46,29 @@ public class ModificarProductosServlet extends HttpServlet {
         List<Fabricante> fabricantes = new ArrayList<>();
         try {
 
-            Integer codigoParam =  Integer.parseInt(req.getParameter("codigo"));
-            Optional<Producto> producto = daoP.findById(codigoParam);
+            String codigoParam = req.getParameter("codigo");
+
+            if (codigoParam == null ||codigoParam.isBlank()) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST,  "Falta el parametro con el codigo del producto a actualizar");
+                return;
+            }
+
+            try {
+                Optional<Producto> producto = daoP.findById(Integer.parseInt(codigoParam));
+                if (producto.isEmpty()) {
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND,  "No existe el producto con el codigo: ");
+                    return;
+                }
+
+                req.setAttribute("producto",  producto.get());
+
+            }catch (SQLException ex) {
+                // En una multipagina lo ideal es navegar, por tanto enviar a error.jsp... y desde ahi poder navegar "Volver"
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+            }
 
             fabricantes = daoF.findAll();
             req.setAttribute("fabricantes", fabricantes);
-            req.setAttribute("producto",  producto.get());
 
             req.getRequestDispatcher("/productos/formularioProducto.jsp").forward(req, resp);
         } catch (SQLException e) {

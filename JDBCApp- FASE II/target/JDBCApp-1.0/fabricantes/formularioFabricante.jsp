@@ -27,30 +27,40 @@
         Fabricante fabricante = (Fabricante) request.getAttribute("fabricante");
         boolean esEdicion = fabricante != null;
 
-        String titulo = esEdicion ? "Editar producto" : "Nuevo Producto";
+        String titulo = esEdicion ? "Editar fabricante" : "Nuevo fabricante";
         String accion = esEdicion ? "actualizar" : "crear";
 
     %>
 
-    <div class="mb-3">
-        <label for="codigo" class="form-label">Código del producto</label>
-        <input type="text" id="codigo" name="codigo" class="form-control"
-               required placeholder="Ej: 101"
-               value="<%= esEdicion ? fabricante.getCodigo() : "" %>"
-            <%= esEdicion ? "readonly" : "" %>>
-        <div class="form-text text-muted">
-            El código identifica de forma única al producto en la base de datos.
-            <% if (esEdicion) { %>
-            (No se puede modificar)
-            <% } %>
+    <div class="container">
+        <div class="form-container">
+            <h2 class="text-center text-primary mb-4"><%= titulo %></h2>
+
+            <form action="<%=request.getContextPath()%>/productos/<%=accion%>" method="post">
+                <div class="mb-3">
+                    <label for="codigo" class="form-label">Código del fabricante</label>
+                    <input type="text" id="codigo" name="codigo" class="form-control"
+                           required placeholder="Ej: 101"
+                           value="<%= esEdicion ? fabricante.getCodigo() : "" %>"
+                        <%= esEdicion ? "readonly" : "" %>>
+                    <div class="form-text text-muted">
+                        El código identifica de forma única al fabricante en la base de datos.
+                        <% if (esEdicion) { %>
+                        (No se puede modificar)
+                        <% } %>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre del fabricante</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" required placeholder="Ej: Lenovo"
+                           value = "<%= esEdicion? fabricante.getNombre():""%>"/>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a href="<%= request.getContextPath() %>/productos/ver" class="btn btn-secondary">⬅️ Cancelar</a>
+                    <button type="submit" class="btn btn-success">💾 Guardar producto</button>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre del producto</label>
-        <input type="text" id="nombre" name="nombre" class="form-control" required placeholder="Ej: Portátil Lenovo"
-               value = "<%= esEdicion? fabricante.getNombre():""%>"/>
-    </div>
-
-
 </body>
 </html>
