@@ -71,7 +71,7 @@
                     <i class="bi bi-person" style="font-size: 2rem;"></i>
                 </div>
                 <h5>Autores</h5>
-                <a href="autores/ver" class="btn btn-primary mt-3">Gestionar autores</a>
+                <a href="authors/list" class="btn btn-primary mt-3">Gestionar autores</a>
             </div>
         </div>
     </div>

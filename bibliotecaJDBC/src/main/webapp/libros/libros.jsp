@@ -109,7 +109,7 @@
                 <th>Codigo</th>
                 <th>Título</th>
                 <th>Autor</th>
-                <th>Fecha</th>
+                <th>Fecha de publicacion</th>
                 <th>Editar</th>
                 <th>Borrar</th>
             </tr>
@@ -125,10 +125,13 @@
                     <td><%=nombreAutor%></td>
                     <td><%=lib.getPublication_date()%></td>
                     <td>
-
-                        <a href="/books/edit" class="btn btn-warning btn-sm">
-                            <i class="bi bi-pencil"></i>
-                        </a>
+                        <form action="<%=request.getContextPath()%>/books/edit"
+                              methods="get">
+                            <input type="hidden" name="id" value="<%=lib.getId()%>">
+                            <button type="submit" class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </form>
                     </td>
                     <td>
                         <form action="<%=request.getContextPath()%>/books/delete"

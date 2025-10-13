@@ -1,9 +1,4 @@
-package com.github.alberto.bibliotecajdbc.controllers;
-
-import java.io.*;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+package com.github.alberto.bibliotecajdbc.controllers.autores;
 
 import com.github.alberto.bibliotecajdbc.model.Autor;
 import com.github.alberto.bibliotecajdbc.model.Libro;
@@ -13,16 +8,23 @@ import com.github.alberto.bibliotecajdbc.repository.GenericDAO;
 import com.github.alberto.bibliotecajdbc.repository.LibroDAO;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/books/list")
-public class listarLibrosServlet extends HttpServlet {
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+@WebServlet("/authors/list")
+public class ListarAutoresServlet extends HttpServlet {
 
     LibroDAO daoLibro =  new LibroDAO();
     GenericDAO<Autor, Long> daoAutor;
 
-    public listarLibrosServlet() throws SQLException {
+    public ListarAutoresServlet() throws SQLException {
     }
 
     public void init(ServletConfig config) throws ServletException {
@@ -38,19 +40,11 @@ public class listarLibrosServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        String filter = request.getParameter("filter");
         List<Autor> autores = new ArrayList<Autor>();
-        List<Libro> libros = new ArrayList<>();
 
         try{
 
             autores = daoAutor.findAll();
-
-            if(filter != null && !filter.isEmpty()){
-                libros = daoLibro.findByTitleOrAuthor(filter);
-            }else{
-                libros = daoLibro.findAll();
-            }
 
         }catch(Exception e){
             request.setAttribute("error",e.getMessage());
@@ -58,8 +52,7 @@ public class listarLibrosServlet extends HttpServlet {
         }
 
         request.setAttribute("autores", autores);
-        request.setAttribute("libros", libros);
-        request.getRequestDispatcher("/libros/libros.jsp").forward(request, response);
+        request.getRequestDispatcher("/autores/autores.jsp").forward(request, response);
     }
 
     public void destroy() {

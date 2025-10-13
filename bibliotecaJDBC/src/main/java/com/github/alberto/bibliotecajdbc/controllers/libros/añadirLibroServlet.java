@@ -1,4 +1,4 @@
-package com.github.alberto.bibliotecajdbc.controllers;
+package com.github.alberto.bibliotecajdbc.controllers.libros;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -12,7 +12,6 @@ import com.github.alberto.bibliotecajdbc.repository.AutorDAO;
 import com.github.alberto.bibliotecajdbc.repository.DBConnection;
 import com.github.alberto.bibliotecajdbc.repository.GenericDAO;
 import com.github.alberto.bibliotecajdbc.repository.LibroDAO;
-import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -41,7 +40,6 @@ public class añadirLibroServlet extends HttpServlet {
         List<Autor> autores = new ArrayList<Autor>();
 
         try{
-
 
             autores = daoAutor.findAll();
 

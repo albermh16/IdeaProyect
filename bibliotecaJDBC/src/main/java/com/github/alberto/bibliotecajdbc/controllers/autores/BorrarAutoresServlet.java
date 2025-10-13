@@ -1,7 +1,6 @@
-package com.github.alberto.bibliotecajdbc.controllers;
+package com.github.alberto.bibliotecajdbc.controllers.autores;
 
 import com.github.alberto.bibliotecajdbc.model.Autor;
-import com.github.alberto.bibliotecajdbc.model.Libro;
 import com.github.alberto.bibliotecajdbc.repository.AutorDAO;
 import com.github.alberto.bibliotecajdbc.repository.DBConnection;
 import com.github.alberto.bibliotecajdbc.repository.GenericDAO;
@@ -15,43 +14,42 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
-@WebServlet("/books/delete")
-public class borrarLibrosServlet extends HttpServlet {
+@WebServlet("/authors/delete")
+public class BorrarAutoresServlet extends HttpServlet {
 
-    GenericDAO<Libro, Long> daoLibro;
+    LibroDAO daoLibro =  new LibroDAO();
     GenericDAO<Autor, Long> daoAutor;
 
-    public borrarLibrosServlet() throws SQLException {
+    public BorrarAutoresServlet() throws SQLException {
     }
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try{
             daoLibro = new LibroDAO();
-
+            daoAutor = new AutorDAO();
         }catch(Exception e){
             throw new RuntimeException("Error al inicializar el DAO",e);
         }
+
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Long id = Long.parseLong(req.getParameter("id"));
 
-        Long libroId = Long.parseLong(request.getParameter("id"));
+        try {
 
-        try{
+            daoAutor.delete(id);
 
-            daoLibro.delete(libroId);
+        } catch (SQLException e) {
 
-        }catch(Exception e){
-            request.setAttribute("error",e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            throw new RuntimeException(e);
         }
 
-        response.sendRedirect(request.getContextPath() + "/books/list" );
-
+        resp.sendRedirect(req.getContextPath()+"/authors/list");
     }
 
     public void destroy() {

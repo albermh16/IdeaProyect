@@ -108,6 +108,15 @@ public class LibroDAO implements GenericDAO<Libro, Long>{
 
     @Override
     public void update(Libro entity) throws SQLException {
+        String sql = "UPDATE book SET title = ?, author_id = ?, publication_date = ?  WHERE id = ?";
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1, entity.getTitle());
+            ps.setLong(2, entity.getAuthor_id());
+            ps.setDate(3, (Date) entity.getPublication_date());
+            ps.setLong(4, entity.getId());
+            ps.executeUpdate();
+
+        }
 
     }
 

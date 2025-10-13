@@ -1,6 +1,7 @@
 package com.github.alberto.bibliotecajdbc.repository;
 
 import com.github.alberto.bibliotecajdbc.model.Autor;
+import com.github.alberto.bibliotecajdbc.model.Libro;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,11 +20,29 @@ public class AutorDAO implements GenericDAO<Autor, Long>{
 
     @Override
     public void save(Autor entity) throws SQLException {
+        String sql = "INSERT INTO Author (id, name) VALUES (?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, entity.getId());
+            ps.setString(2, entity.getNombre());
+            ps.executeUpdate();
+        }
 
     }
 
     @Override
     public Optional<Autor> findById(Long aLong) throws SQLException {
+
+        String sql = "select * from autor where id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setLong(1, aLong);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()){
+            Autor autor = new Autor(
+                    rs.getLong("id"),
+                    rs.getString("name")
+            );
+            return Optional.of(autor);
+        }
         return Optional.empty();
     }
 
@@ -54,6 +73,11 @@ public class AutorDAO implements GenericDAO<Autor, Long>{
 
     @Override
     public void delete(Long aLong) throws SQLException {
+        String sql = "delete from author where id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setLong(1, aLong);
+            ps.executeUpdate();
+        }
 
     }
 
