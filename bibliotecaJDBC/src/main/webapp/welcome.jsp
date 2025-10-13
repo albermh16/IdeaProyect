@@ -62,7 +62,7 @@
                     <i class="bi bi-book" style="font-size: 2rem;"></i>
                 </div>
                 <h5>Libros</h5>
-                <a href="libros/ver" class="btn btn-primary mt-3">Gestionar libros</a>
+                <a href="books/list" class="btn btn-primary mt-3">Gestionar libros</a>
             </div>
         </div>
         <div class="col-md-3">

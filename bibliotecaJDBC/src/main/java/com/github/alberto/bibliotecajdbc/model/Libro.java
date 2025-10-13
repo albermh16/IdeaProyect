@@ -4,49 +4,60 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Libro implements Serializable {
-    private String titulo;
-    private String autor;
-    private Date fecha_publicacion;
+    private Long id;
+    private String title;
+    private Long author_id;
+    private Date publication_date;
 
     public Libro() {
     }
 
-    public Libro(String titulo, String autor, Date fecha_publicacion) {
-        this.titulo = titulo;
-        this.autor = autor;
-        this.fecha_publicacion = fecha_publicacion;
+    public Libro(Long id, String title, Long author_id, Date publication_date) {
+        this.id = id;
+        this.title = title;
+        this.author_id = author_id;
+        this.publication_date = publication_date;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public Long getId() {
+        return id;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getAutor() {
-        return autor;
+    public Date getPublication_date() {
+        return publication_date;
     }
 
-    public void setAutor(String autor) {
-        this.autor = autor;
+    public void setPublication_date(Date publication_date) {
+        this.publication_date = publication_date;
     }
 
-    public Date getFecha_publicacion() {
-        return fecha_publicacion;
+    public Long getAuthor_id() {
+        return author_id;
     }
 
-    public void setFecha_publicacion(Date fecha_publicacion) {
-        this.fecha_publicacion = fecha_publicacion;
+    public void setAuthor_id(Long author_id) {
+        this.author_id = author_id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
     public String toString() {
-        return "libro{" +
-                "titulo='" + titulo + '\'' +
-                ", autor='" + autor + '\'' +
-                ", fecha_publicacion=" + fecha_publicacion +
+        return "Libro{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author_id=" + author_id +
+                ", publication_date=" + publication_date +
                 '}';
     }
 }

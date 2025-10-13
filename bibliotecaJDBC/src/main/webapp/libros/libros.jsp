@@ -1,5 +1,7 @@
 <%@ page import="com.github.alberto.bibliotecajdbc.model.Libro" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.github.alberto.bibliotecajdbc.model.Autor" %>
+<%@ page import="com.github.alberto.bibliotecajdbc.utils.Utils" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -49,13 +51,13 @@
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark px-3">
-    <a class="navbar-brand" href="/welcome.jsp">Biblioteca</a>
+    <a class="navbar-brand" href="<%=request.getContextPath()%>">Biblioteca</a>
 </nav>
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="fw-bold text-dark">Libros disponibles</h3>
-        <a href="/books/new" class="btn btn-success">
+        <a href="<%=request.getContextPath()%>/books/new" class="btn btn-success">
             <i class="bi bi-plus-lg"></i> Nuevo libro
         </a>
     </div>
@@ -83,22 +85,28 @@
     %>
     --%>
     -->
+    <%
 
+        List<Libro> libros = (List<Libro>) request.getAttribute("libros");
+        List<Autor> autores = (List<Autor>) request.getAttribute("autores");
+
+        if(libros !=null || !libros.isEmpty()){
+    %>
 
     <!-- Botón de filtrado -->
-    <form class="d-flex mb-3" method="get" action="/books/list">
-        <input type="text" class="form-control me-2" name="filter" placeholder="Filtrar por título o autor">
+    <form class="d-flex mb-3" method="get" action="<%=request.getContextPath()%>/books/list">
+        <input type="text" class="form-control me-2" name="filter" placeholder="Filtrar por título o autor"
+        value="<%=request.getParameter("filter") != null ? request.getParameter("filter") : ""%>">
         <button class="btn btn-primary" type="submit">Filtrar</button>
     </form>
-    <%
-        List<Libro> libros = (List<Libro>) request.getAttribute("libros");
-    %>
+
 
     <!-- Tabla de libros -->
     <div class="card p-3">
         <table class="table table-striped table-hover align-middle">
             <thead>
             <tr>
+                <th>Codigo</th>
                 <th>Título</th>
                 <th>Autor</th>
                 <th>Fecha</th>
@@ -109,21 +117,28 @@
             <tbody>
             <%
                 for(Libro lib: libros){
+                    String nombreAutor = Utils.obtenerNombreAutor(autores, lib.getAuthor_id());
             %>
                 <tr>
-                    <td><%=lib.getTitulo()%></td>
-                    <td><%=lib.getAutor()%></td>
-                    <td><%=lib.getFecha_publicacion()%></td>
+                    <td><%=lib.getId()%></td>
+                    <td><%=lib.getTitle()%></td>
+                    <td><%=nombreAutor%></td>
+                    <td><%=lib.getPublication_date()%></td>
                     <td>
 
-                        <a href="/books/edit?id=${book.id}" class="btn btn-warning btn-sm">
+                        <a href="/books/edit" class="btn btn-warning btn-sm">
                             <i class="bi bi-pencil"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="/books/delete?id=${book.id}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas borrar este libro?');">
-                            <i class="bi bi-trash"></i>
-                        </a>
+                        <form action="<%=request.getContextPath()%>/books/delete"
+                              methods="post"
+                              onclick="return confirm('¿Seguro que deseas borrar este libro?');">
+                            <input type="hidden" name="id" value="<%=lib.getId()%>">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
             <%
@@ -132,10 +147,16 @@
             </tbody>
         </table>
     </div>
+    <% } else { %>
+    <div class="alert alert-warning" role="alert">
+        ⚠️ No hay productos disponibles
+    </div>
+    <% } %>
+
 
     <!-- Botón volver -->
     <div class="mt-4">
-        <a href="/welcome.jsp" class="btn btn-secondary">
+        <a href="<%=request.getContextPath()%>" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Volver al inicio
         </a>
     </div>

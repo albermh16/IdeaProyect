@@ -1,10 +1,5 @@
 package com.github.alberto.bibliotecajdbc.controllers;
 
-import java.io.*;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.alberto.bibliotecajdbc.model.Autor;
 import com.github.alberto.bibliotecajdbc.model.Libro;
 import com.github.alberto.bibliotecajdbc.repository.AutorDAO;
@@ -13,53 +8,50 @@ import com.github.alberto.bibliotecajdbc.repository.GenericDAO;
 import com.github.alberto.bibliotecajdbc.repository.LibroDAO;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/books/list")
-public class listarLibrosServlet extends HttpServlet {
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-    LibroDAO daoLibro =  new LibroDAO();
+@WebServlet("/books/delete")
+public class borrarLibrosServlet extends HttpServlet {
+
+    GenericDAO<Libro, Long> daoLibro;
     GenericDAO<Autor, Long> daoAutor;
 
-    public listarLibrosServlet() throws SQLException {
+    public borrarLibrosServlet() throws SQLException {
     }
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try{
             daoLibro = new LibroDAO();
-            daoAutor = new AutorDAO();
+
         }catch(Exception e){
             throw new RuntimeException("Error al inicializar el DAO",e);
         }
-
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        String filter = request.getParameter("filter");
-        List<Autor> autores = new ArrayList<Autor>();
-        List<Libro> libros = new ArrayList<>();
+        Long libroId = Long.parseLong(request.getParameter("id"));
 
         try{
 
-            autores = daoAutor.findAll();
-
-            if(filter != null && !filter.isEmpty()){
-                libros = daoLibro.findByTitleOrAuthor(filter);
-            }else{
-                libros = daoLibro.findAll();
-            }
+            daoLibro.delete(libroId);
 
         }catch(Exception e){
             request.setAttribute("error",e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
 
-        request.setAttribute("autores", autores);
-        request.setAttribute("libros", libros);
-        request.getRequestDispatcher("/libros/libros.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/books/list" );
+
     }
 
     public void destroy() {

@@ -1,5 +1,7 @@
 package com.github.alberto.bibliotecajdbc.repository;
 
+import com.github.alberto.bibliotecajdbc.model.Libro;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -19,5 +21,5 @@ public interface GenericDAO <T, ID>{
     void update(T entity)  throws SQLException;
 
     //DELETE
-    void delete(T entity)  throws SQLException;
+    void delete(ID id)  throws SQLException;
 }
