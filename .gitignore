@@ -1,0 +1,21 @@
+# Ignorar configuración de IntelliJ IDEA
+.idea/
+
+# Ignorar archivos de sistema de IntelliJ
+*.iml
+*.iws
+*.ipr
+
+# Ignorar carpetas de compilación
+target/
+out/
+build/
+
+# Ignorar archivos temporales
+*.log
+*.tmp
+*.bak
+
+# Ignorar archivos del sistema operativo
+.DS_Store
+Thumbs.db
