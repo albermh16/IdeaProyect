@@ -1,4 +1,4 @@
-package com.daw.springboottutorial2;
+package es.daw.springboottutorial2;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

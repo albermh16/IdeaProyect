@@ -1,4 +1,4 @@
-package com.daw.springboottutorial2;
+package es.daw.springboottutorial2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
