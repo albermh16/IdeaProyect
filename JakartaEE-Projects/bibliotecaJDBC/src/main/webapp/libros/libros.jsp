@@ -51,7 +51,7 @@
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark px-3">
-    <a class="navbar-brand" href="<%=request.getContextPath()%>">Biblioteca</a>
+    <a class="navbar-brand" href="<%=request.getContextPath()%>/welcome.jsp">Biblioteca</a>
 </nav>
 
 <div class="container mt-5">
@@ -63,28 +63,28 @@
     </div>
 
     <!-- Mensajes de éxito o error -->
-    <!--
-    <%--
+
+
     <%
-        String successMessage = request.getAttribute("successMessage").toString();
-        String errorMessage = request.getAttribute(("errorMessage")).toString();
+        String successMessage = (String)request.getAttribute("successMessage");
+        String errorMessage = (String)request.getAttribute(("errorMessage"));
 
         if(successMessage != null){
     %>
             <div class = "alert alert-success"><%=successMessage%></div>
     <%
-            request.removeAttribute("successMessage"º);
+            session.removeAttribute("successMessage");
         }
 
         if(errorMessage != null){
     %>
             <div class = "alert alert-danger"><%=errorMessage%></div>
     <%
-            request.removeAttribute("errorMessage");
+            session.removeAttribute("errorMessage");
         }
     %>
-    --%>
-    -->
+
+
     <%
 
         List<Libro> libros = (List<Libro>) request.getAttribute("libros");
@@ -159,7 +159,7 @@
 
     <!-- Botón volver -->
     <div class="mt-4">
-        <a href="<%=request.getContextPath()%>" class="btn btn-secondary">
+        <a href="<%=request.getContextPath()%>/welcome.jsp" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Volver al inicio
         </a>
     </div>

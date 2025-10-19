@@ -15,6 +15,20 @@
 <body class="bg-light">
 
 <%
+    String error = (String) session.getAttribute("errorMessageForm");
+    String success = (String) session.getAttribute("successMessageForm");
+
+    if (error != null) {
+%>
+<div class="alert alert-danger text-center"><%= error %></div>
+<%
+        session.removeAttribute("errorMessageForm");
+    }
+%>
+
+
+
+<%
     List<Autor> autores = (List<Autor>) request.getAttribute("autores");
     Libro libro = (Libro) request.getAttribute("libro");
 
@@ -59,7 +73,7 @@
                 <!-- Autor -->
                 <div class="mb-3">
                     <label for="author" class="form-label fw-semibold">Autor</label>
-                    <select class="form-select" id="author" name="author_id" required>
+                    <select class="form-select" id="author" name="author_id">
                         <option value="">-- Selecciona un autor --</option>
                         <%
                             if(autores != null && !autores.isEmpty()){

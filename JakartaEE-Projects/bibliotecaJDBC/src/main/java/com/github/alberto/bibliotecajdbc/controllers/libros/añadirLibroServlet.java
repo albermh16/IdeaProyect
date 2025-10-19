@@ -39,6 +39,7 @@ public class añadirLibroServlet extends HttpServlet {
         List<Libro> libros = new ArrayList<Libro>();
         List<Autor> autores = new ArrayList<Autor>();
 
+
         try{
 
             autores = daoAutor.findAll();
@@ -53,42 +54,53 @@ public class añadirLibroServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
-        Long idLibro = Long.parseLong(request.getParameter("id"));
-        if(idLibro == null){
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        String titulo = request.getParameter("title");
-        if(titulo == null){
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        Long idAutor = Long.parseLong(request.getParameter("author_id"));
-        if(idAutor == null){
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        Date fecha = Date.valueOf(request.getParameter("publication_date"));
-        if( fecha == null){
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-        Libro libro = new Libro(idLibro,titulo,idAutor,fecha);
+        HttpSession session = request.getSession();
 
         try{
 
+            String idParam = request.getParameter("id");
+            String titulo = request.getParameter("title");
+            String autorIdParam = request.getParameter("author_id");
+            String fechaParam = request.getParameter("publication_date");
+
+            if(idParam == null || idParam.isBlank() ||
+                    titulo == null || titulo.isBlank() ||
+                    fechaParam == null || fechaParam.isBlank() ||
+                    autorIdParam == null || autorIdParam.isBlank()){
+
+                session.setAttribute("errorMessageForm", "Todos los campos son obligatorios");
+
+                List<Autor> autores = daoAutor.findAll();
+                request.setAttribute("autores", autores);
+                request.getRequestDispatcher("/libros/formularioLibros.jsp").forward(request, response);
+                return;
+            }
+
+            Long idLibro = Long.parseLong(idParam);
+            Long autorId = Long.parseLong(autorIdParam);
+            Date fecha = Date.valueOf(fechaParam);
+
+            if(titulo.length() < 3){
+                session.setAttribute("errorMessage", "La titulo debe ter no minimo 3 letras");
+                response.sendRedirect(request.getContextPath()+"/books/new");
+                return;
+            }
+
+
+            Libro libro = new Libro(idLibro,titulo,autorId,fecha);
+
             daoLibro.save(libro);
+
+            request.setAttribute("libro", libro);
+            session.setAttribute("successMessageForm","Libro añadido correctamente");
 
         }catch(Exception e){
             request.setAttribute("error",e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
+            session.setAttribute("errorMessage","Error al crear libros");
 
         }
+
 
         response.sendRedirect(request.getContextPath() + "/books/list");
 

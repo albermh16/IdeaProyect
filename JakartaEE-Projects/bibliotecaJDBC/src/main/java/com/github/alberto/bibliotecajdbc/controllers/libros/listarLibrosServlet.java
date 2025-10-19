@@ -38,6 +38,22 @@ public class listarLibrosServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            String success = (String) session.getAttribute("successMessage");
+            String error = (String) session.getAttribute("errorMessage");
+
+            if (success != null) {
+                request.setAttribute("successMessage", success);
+                session.removeAttribute("successMessage");
+            }
+
+            if(error != null){
+                request.setAttribute("errorMessage", error);
+                session.removeAttribute("errorMessage");
+            }
+        }
+
         String filter = request.getParameter("filter");
         List<Autor> autores = new ArrayList<Autor>();
         List<Libro> libros = new ArrayList<>();

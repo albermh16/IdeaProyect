@@ -32,19 +32,42 @@
         }
     </style>
 </head>
-<body>
+
+<%
+    String usuario = null;
+    String color = "#ffffff";
+
+    String lang = null;
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null){
+        for(Cookie c : cookies){
+            if("lang".equals(c.getName()))lang = c.getValue();
+            if("colorFavorito".equals(c.getName()))color = c.getValue();
+            if("userLoged".equals(c.getName()))usuario = c.getValue();
+        }
+    }
+    if (lang == null) lang = "es";
+    if (usuario == null) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        return;
+    }
+%>
+<body style="background-color: <%=color%>">
+
+
+
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark px-3">
-    <a class="navbar-brand" href="#">Biblioteca</a>
+    <a class="navbar-brand" href="/welcome.jsp">Biblioteca</a>
     <div class="ms-auto">
         <div class="dropdown">
             <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
                 Preferencia de idioma
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="#">Español</a></li>
-                <li><a class="dropdown-item" href="#">Inglés</a></li>
+                <li><a class="dropdown-item" href="<%=request.getContextPath()%>/es">Español</a></li>
+                <li><a class="dropdown-item" href="<%=request.getContextPath()%>/en">Inglés</a></li>
             </ul>
         </div>
     </div>
@@ -52,9 +75,10 @@
 
 <!-- Contenido principal -->
 <div class="container text-center mt-5">
-    <h2 class="fw-bold">Bienvenido a la Gestión de Biblioteca</h2>
+    <h2 class="fw-bold"><%=lang.equals("en") ? "Library Management" : "Gestion de biblioteca"%></h2>
     <p class="text-muted">Administra tus libros y autores fácilmente</p>
-
+    <h2>Bienvenido, <%= usuario %> </h2>
+    <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger">Cerrar sesión</a>
     <div class="row justify-content-center mt-4">
         <div class="col-md-3">
             <div class="card p-4">

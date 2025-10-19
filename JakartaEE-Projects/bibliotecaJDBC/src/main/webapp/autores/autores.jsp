@@ -66,7 +66,7 @@
                 <td><%=aut.getNombre()%></td>
                 <td>
                     <form action="<%=request.getContextPath()%>/authors/edit"
-                          methods="get">
+                          method="get">
                         <input type="hidden" name="id" value="<%=aut.getId()%>">
                         <button type="submit" class="btn btn-warning btn-sm">
                             <i class="bi bi-pencil"></i>
@@ -75,7 +75,7 @@
                 </td>
                 <td>
                     <form action="<%=request.getContextPath()%>/authors/delete"
-                          methods="post"
+                          method="post"
                           onclick="return confirm('¿Seguro que deseas borrar este libro?');">
                         <input type="hidden" name="id" value="<%=aut.getId()%>">
                         <button type="submit" class="btn btn-danger btn-sm">

@@ -32,7 +32,7 @@ public class AutorDAO implements GenericDAO<Autor, Long>{
     @Override
     public Optional<Autor> findById(Long aLong) throws SQLException {
 
-        String sql = "select * from autor where id = ?";
+        String sql = "select * from author where id = ?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setLong(1, aLong);
         ResultSet rs = ps.executeQuery();
@@ -68,6 +68,13 @@ public class AutorDAO implements GenericDAO<Autor, Long>{
 
     @Override
     public void update(Autor entity) throws SQLException {
+        String sql = "UPDATE author SET name = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setLong(1, entity.getId());
+            ps.setString(2, entity.getNombre());
+            ps.executeUpdate();
+
+        }
 
     }
 

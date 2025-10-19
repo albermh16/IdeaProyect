@@ -11,7 +11,7 @@
 <body class="bg-light">
 
 <%
-    Autor autor = (Autor) request.getAttribute("autores");
+    Autor autor = (Autor) request.getAttribute("autor");
     boolean edicion = autor != null;
 
     String accion = edicion ? "edit" : "new";
