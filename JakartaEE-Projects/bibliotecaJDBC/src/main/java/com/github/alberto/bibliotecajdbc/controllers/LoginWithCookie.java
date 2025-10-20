@@ -17,10 +17,6 @@ public class LoginWithCookie extends HttpServlet {
     final static String user2 = "master";
     final static String pass2 = "master";
 
-    final static String cookie_color = "colorFondo";
-
-
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
