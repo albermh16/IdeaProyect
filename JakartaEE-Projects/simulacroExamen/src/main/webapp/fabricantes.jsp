@@ -24,29 +24,18 @@
     <body class="bg-light">
 
     <%
-        boolean mostrar = true;
-
-        Cookie [] cookie = request.getCookies();
-        if(cookie != null){
-            for(Cookie c: cookie){
-                if("mostrarProductos".equals(c.getName())){
-                    mostrar = "si".equalsIgnoreCase(c.getValue());
-                    break;
-                }
-
-            }
-        }
+       boolean mostrar = (boolean) request.getAttribute("mostrar");
     %>
 
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-primary mb-0">🏭 Fabricantes registrados</h2>
 
-            <form action="<%= request.getContextPath() %>/fabricantes/ver" method="post" class="text-center mb-4">
+            <form action="<%= request.getContextPath() %>/preferencias" method="post" class="text-center mb-4">
                 <label for="mostrar" class="form-label fw-bold">Mostrar productos por fabricante:</label>
                 <select name="mostrar" id="mostrar" class="form-select d-inline-block w-auto">
-                    <option value="si">Sí</option>
-                    <option value="no">No</option>
+                    <option value="si" <%= !mostrar ? "selected" : ""%>>Si</option>
+                    <option value="no" <%= mostrar ? "" : "selected"%>>No</option>
                 </select>
                 <button type="submit" class="btn btn-outline-primary ms-2">Guardar</button>
             </form>

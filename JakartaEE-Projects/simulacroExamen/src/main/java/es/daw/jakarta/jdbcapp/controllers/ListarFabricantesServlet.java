@@ -26,6 +26,23 @@ public class ListarFabricantesServlet extends HttpServlet {
 
     // listar fabricantes
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+
+
+        boolean mostrar = true;
+
+        Cookie [] cookie = request.getCookies();
+        if(cookie != null){
+            for(Cookie c: cookie){
+                if("mostrarProductos".equals(c.getName())){
+                    mostrar = "si".equalsIgnoreCase(c.getValue());
+                    break;
+                }
+            }
+        }
+
+        request.setAttribute("mostrar", mostrar);
+
         List<Fabricante> fabricantes = new ArrayList<>(); // no es nula, está vacía
         List<Producto> productos = new ArrayList<>();
         try {
@@ -50,19 +67,6 @@ public class ListarFabricantesServlet extends HttpServlet {
 
     }
 
-
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        String mostrar = request.getParameter("mostrar");
-
-        Cookie cookie = new Cookie("mostrarProductos", mostrar);
-        cookie.setMaxAge(3600);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
-        response.sendRedirect(request.getContextPath() + "/fabricantes/ver");
-
-    }
 
     @Override
     public void destroy() {
