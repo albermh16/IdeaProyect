@@ -53,7 +53,14 @@ public class ListarFabricantesServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        String mostrar = request.getParameter("mostrar");
 
+        Cookie cookie = new Cookie("mostrarProductos", mostrar);
+        cookie.setMaxAge(3600);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        response.sendRedirect(request.getContextPath() + "/fabricantes/ver");
 
     }
 

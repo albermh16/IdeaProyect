@@ -23,11 +23,26 @@
     </head>
     <body class="bg-light">
 
+    <%
+        boolean mostrar = true;
+
+        Cookie [] cookie = request.getCookies();
+        if(cookie != null){
+            for(Cookie c: cookie){
+                if("mostrarProductos".equals(c.getName())){
+                    mostrar = "si".equalsIgnoreCase(c.getValue());
+                    break;
+                }
+
+            }
+        }
+    %>
+
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-primary mb-0">🏭 Fabricantes registrados</h2>
 
-            <form action="<%= request.getContextPath() %>/preferencias" method="post" class="text-center mb-4">
+            <form action="<%= request.getContextPath() %>/fabricantes/ver" method="post" class="text-center mb-4">
                 <label for="mostrar" class="form-label fw-bold">Mostrar productos por fabricante:</label>
                 <select name="mostrar" id="mostrar" class="form-select d-inline-block w-auto">
                     <option value="si">Sí</option>
@@ -51,7 +66,10 @@
                 <tr>
                     <th scope="col">Código</th>
                     <th scope="col">Nombre</th>
+
+                    <% if(mostrar){%>
                     <th scope="col">Nombre Producto</th>
+                    <%}%>
                     <th scope="col">Editar</th>
                     <th scope="col">Borrar</th>
                 </tr>
@@ -65,7 +83,9 @@
                 <tr>
                     <td><%= f.getCodigo() %></td>
                     <td><%= f.getNombre() %></td>
+                    <% if(mostrar){%>
                     <td>
+
                         <ul class="mb-0">
                             <%
                                 for (String nombre : nombresProductos) {
@@ -77,6 +97,7 @@
                             %>
                         </ul>
                     </td>
+                    <% } %>
                     <td>
                         <form action="<%= request.getContextPath() %>/fabricantes/editar" method="get">
                             <input type="hidden" name="codigo" value="<%= f.getCodigo() %>">
