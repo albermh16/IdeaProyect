@@ -3,13 +3,14 @@ package es.daw.productoapirest.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
-//No meter @Data ni @toString por que provocaria un bucle infinito
+//@ToString
 //@Table(name = "fabricante")
 public class Fabricante {
 
@@ -24,4 +25,12 @@ public class Fabricante {
     @OneToMany(mappedBy = "fabricante", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Producto> productos;
 
+//    @Override
+//    public String toString() {
+//        return "Fabricante{" +
+//                "codigo=" + codigo +
+//                ", nombre='" + nombre + '\'' +
+//                //", productos=" + productos +
+//                '}';
+//    }
 }
