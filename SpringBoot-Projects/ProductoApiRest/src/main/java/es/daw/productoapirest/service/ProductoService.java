@@ -73,8 +73,17 @@ public class ProductoService {
 
     }
 
-    public void deleteByCodigo(String codigo) {
-
+    public boolean deleteByCodigo(String codigo) {
+        Optional<Producto> productoEntity = productoRepository.findByCodigo(codigo);
+        if(productoEntity.isPresent()){
+            //productoRepository.delete(productoEntity.get()); // Borrar por entity completo
+            productoRepository.deleteById(productoEntity.get().getId());
+            //devolver 204
+            return true;
+        }
+        //PENDIENTE!!! Lanzar excepcion propia ProductoNotFoundException
+        //El mensaje: el producto con codigo xxx no existe en la BD
+        return false;
     }
 
 
