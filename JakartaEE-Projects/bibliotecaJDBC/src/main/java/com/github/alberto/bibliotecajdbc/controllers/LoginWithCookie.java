@@ -51,7 +51,8 @@ public class LoginWithCookie extends HttpServlet {
             resp.addCookie(userCookie);
             resp.addCookie(colorCookie);
 
-            resp.sendRedirect(req.getContextPath() + "/welcome.jsp");
+
+
         }else{
             req.setAttribute("errorMessage", "Usuario o contraseña incorrectos");
             req.getRequestDispatcher("/login.jsp").forward(req, resp);
@@ -59,6 +60,17 @@ public class LoginWithCookie extends HttpServlet {
 
 
 
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null){
+            for(Cookie c : cookies){
+                if("colorFavorito".equals(c.getName()))color = c.getValue();
+                if("userLoged".equals(c.getName()))usuario = c.getValue();
+            }
+        }
+
+        req.setAttribute("color", color);
+        req.setAttribute("usuario", usuario);
+        req.getRequestDispatcher("/welcome.jsp").forward(req, resp);
 
 
 

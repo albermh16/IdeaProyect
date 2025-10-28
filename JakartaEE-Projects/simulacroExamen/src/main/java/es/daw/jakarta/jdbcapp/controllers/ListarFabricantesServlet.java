@@ -29,7 +29,7 @@ public class ListarFabricantesServlet extends HttpServlet {
 
 
 
-        boolean mostrar = true;
+        boolean mostrar = false;
 
         Cookie [] cookie = request.getCookies();
         if(cookie != null){

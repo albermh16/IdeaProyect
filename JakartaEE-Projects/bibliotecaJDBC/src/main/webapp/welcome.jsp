@@ -33,24 +33,17 @@
     </style>
 </head>
 
-<%
-    String usuario = null;
-    String color = "#ffffff";
+<%--
 
-    String lang = null;
-    Cookie[] cookies = request.getCookies();
-    if (cookies != null){
-        for(Cookie c : cookies){
-            if("lang".equals(c.getName()))lang = c.getValue();
-            if("colorFavorito".equals(c.getName()))color = c.getValue();
-            if("userLoged".equals(c.getName()))usuario = c.getValue();
-        }
-    }
     if (lang == null) lang = "es";
     if (usuario == null) {
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
+--%>
+<%
+    String color = (String)request.getAttribute("color");
+    String usuario = (String)request.getAttribute("usuario");
 %>
 <body style="background-color: <%=color%>">
 
@@ -75,7 +68,7 @@
 
 <!-- Contenido principal -->
 <div class="container text-center mt-5">
-    <h2 class="fw-bold"><%=lang.equals("en") ? "Library Management" : "Gestion de biblioteca"%></h2>
+    <h2 class="fw-bold"></h2>
     <p class="text-muted">Administra tus libros y autores fácilmente</p>
     <h2>Bienvenido, <%= usuario %> </h2>
     <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger">Cerrar sesión</a>
