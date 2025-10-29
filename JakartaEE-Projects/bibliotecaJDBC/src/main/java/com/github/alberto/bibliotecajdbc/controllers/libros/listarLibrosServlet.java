@@ -1,6 +1,7 @@
 package com.github.alberto.bibliotecajdbc.controllers.libros;
 
 import java.io.*;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,9 @@ public class listarLibrosServlet extends HttpServlet {
         }
 
         String filter = request.getParameter("filter");
+        String yearFrom = request.getParameter("yearFrom");
+        String yearTo = request.getParameter("yearTo");
+
         List<Autor> autores = new ArrayList<Autor>();
         List<Libro> libros = new ArrayList<>();
 
@@ -62,11 +66,26 @@ public class listarLibrosServlet extends HttpServlet {
 
             autores = daoAutor.findAll();
 
-            if(filter != null && !filter.isEmpty()){
+            if (yearFrom != null && !yearFrom.isEmpty() && yearTo != null && !yearTo.isEmpty()) {
+                int from = Integer.parseInt(yearFrom);
+                int to = Integer.parseInt(yearTo);
+
+                Date fromDate = Date.valueOf(from + "-01-01");
+                Date toDate = Date.valueOf(to + "-12-31");
+
+                libros = daoLibro.findByPublicationDateRange(fromDate, toDate);
+
+            } else if(filter != null && !filter.isEmpty()){
+
                 libros = daoLibro.findByTitleOrAuthor(filter);
+
             }else{
+
                 libros = daoLibro.findAll();
             }
+
+
+
 
         }catch(Exception e){
             request.setAttribute("error",e.getMessage());

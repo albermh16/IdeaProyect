@@ -58,6 +58,28 @@ public class LibroDAO implements GenericDAO<Libro, Long>{
         return Optional.empty();
     }
 
+    public List<Libro> findByPublicationDateRange(Date from, Date to) throws SQLException {
+        List<Libro> libros = new ArrayList<>();
+
+        String sql = "SELECT * FROM book WHERE publication_date BETWEEN ? AND ? ORDER BY publication_date";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDate(1, from);
+            ps.setDate(2, to);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                libros.add(new Libro(
+                        rs.getLong("id"),
+                        rs.getString("title"),
+                        rs.getLong("author_id"),
+                        rs.getDate("publication_date")
+                ));
+            }
+        }
+        return libros;
+    }
+
 
     @Override
     public List findAll() throws SQLException {

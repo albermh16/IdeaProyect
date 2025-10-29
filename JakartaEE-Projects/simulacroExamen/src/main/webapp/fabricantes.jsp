@@ -40,6 +40,9 @@
                 <button type="submit" class="btn btn-outline-primary ms-2">Guardar</button>
             </form>
 
+
+
+
             <a href="<%= request.getContextPath() %>/fabricantes/crear" class="btn btn-success">➕ Añadir fabricante</a>
         </div>
 

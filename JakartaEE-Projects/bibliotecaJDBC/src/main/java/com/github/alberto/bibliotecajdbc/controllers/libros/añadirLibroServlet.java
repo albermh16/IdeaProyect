@@ -39,7 +39,6 @@ public class añadirLibroServlet extends HttpServlet {
         List<Libro> libros = new ArrayList<Libro>();
         List<Autor> autores = new ArrayList<Autor>();
 
-
         try{
 
             autores = daoAutor.findAll();

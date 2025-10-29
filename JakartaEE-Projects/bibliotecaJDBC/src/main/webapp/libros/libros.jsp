@@ -61,6 +61,17 @@
             <i class="bi bi-plus-lg"></i> Nuevo libro
         </a>
     </div>
+    <form action="${pageContext.request.contextPath}/books/list" method="get" class="d-flex align-items-center gap-2 mt-3">
+        <label for="yearFrom" class="fw-bold">Año desde:</label>
+        <input type="number" id="yearFrom" name="yearFrom" class="form-control w-auto" min="0" max="2100">
+
+        <label for="yearTo" class="fw-bold">hasta:</label>
+        <input type="number" id="yearTo" name="yearTo" class="form-control w-auto" min="0" max="2100">
+
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-search"></i> Filtrar
+        </button>
+    </form>
 
     <!-- Mensajes de éxito o error -->
 
