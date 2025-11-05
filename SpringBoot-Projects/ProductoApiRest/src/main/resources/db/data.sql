@@ -21,3 +21,9 @@ INSERT INTO producto ( nombre, codigo, precio, codigo_fabricante) VALUES ( 'Port
 INSERT INTO producto ( nombre, codigo, precio, codigo_fabricante) VALUES ( 'Portátil Ideapd 320', '665Z',444, 2);
 INSERT INTO producto ( nombre, codigo, precio, codigo_fabricante) VALUES ( 'Impresora HP Deskjet 3720', '666H',59.99, 3);
 INSERT INTO producto ( nombre, codigo, precio, codigo_fabricante) VALUES ( 'Impresora HP Laserjet Pro M26nw', '655Z',180, 3);
+
+-- Crear roles por defecto
+INSERT INTO roles (name) VALUES ('ROLE_USER');
+INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
+
+-- No vamos a crear usuarios. Se crearán a través de un endpoint

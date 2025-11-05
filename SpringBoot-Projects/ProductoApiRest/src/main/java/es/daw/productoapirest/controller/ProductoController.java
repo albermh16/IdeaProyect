@@ -4,18 +4,36 @@ import es.daw.productoapirest.dto.ProductoDTO;
 import es.daw.productoapirest.repository.ProductoRepository;
 import es.daw.productoapirest.service.ProductoService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor // crear un constructor con propiedades final
 @RestController
 @RequestMapping("/api/productos")
+@Validated
+/*
+Spring no ejecuta el Bean Validation sobre parámetros simples (como @PathVariable o @RequestParam).
+Por eso tu @Pattern no dispara la excepción ConstraintViolationException.
+
+En los endpoint tipo:
+@PostMapping
+public ResponseEntity<ProductoDTO> crearProducto(@Valid @RequestBody ProductoDTO productoDTO) {
+    ...
+}
+@Valid (de jakarta.validation.Valid) ya activa automáticamente la validación del cuerpo del request (@RequestBody).
+Si hay errores, lanza MethodArgumentNotValidException
+ */
 public class ProductoController {
 
     // 1. inyección por propiedad
@@ -34,6 +52,14 @@ public class ProductoController {
     // 2. inyección por constructor
 
     private final ProductoService productoService;
+
+    // ----------------------------------
+    // CONFIGURACIÓN PERSONALIZADA
+    @Value("${config.daw.code}")
+    private String code_conf;
+    @Value("${config.daw.message}")
+    private String message_conf;
+    //-------------------------------------
 
 
     @GetMapping
@@ -65,21 +91,90 @@ public class ProductoController {
         }
     }
 
+
+    // PENDIENTE CAPTURAR EXCEPTION ConstraintViolationException
     @DeleteMapping("/{codigo}")
-    public ResponseEntity<Void> delete(@PathVariable String codigo) {
-        if(productoService.deleteByCodigo(codigo)) {
-            return ResponseEntity.noContent().build(); // 204... ok!
-        }
-        return ResponseEntity.notFound().build(); //404
+    public ResponseEntity<Void> delete(@PathVariable
+                              @Pattern(regexp = "^[0-9]{3}[A-Z]{1}$",
+                                      message="El código debe tener 3 dígitos + 1 letra May al final"
+                              )
+                                           String codigo) {
+//        if (productoService.deleteByCodigo(codigo))
+//            return ResponseEntity.noContent().build(); // 204... ok!
+        //return ResponseEntity.notFound().build(); // 404
+
+        productoService.deleteByCodigo(codigo);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 
     @GetMapping("/parse-int")
-    public String parseInteger(@RequestParam (name="numero", defaultValue = "666")
+    public String parseInteger(@RequestParam(name="numero",defaultValue = "666")
+                               //int number){
                                    String number) {
         int parsedNumber = Integer.parseInt(number); // Puede lanzar NumberFormatException
         return "Parsed number: " + parsedNumber;
+
+        //return "Parsed number "+number;
     }
 
 
+    @PutMapping("/{codigo}")
+    public ResponseEntity<ProductoDTO> update(
+            @PathVariable String codigo,
+            @Valid @RequestBody ProductoDTO productoDTO
+    ) {
+
+        Optional<ProductoDTO> dto = productoService.update(codigo, productoDTO);
+
+        if (dto.isPresent()) {
+            return ResponseEntity.ok(dto.get());
+        }
+
+        return ResponseEntity.notFound().build();
+
+    }
+
+    @PatchMapping("/{codigo}")
+    public ResponseEntity<ProductoDTO> updateParcial(@Valid @RequestBody Map<String,Object> camposActualizados, @PathVariable String codigo) {
+
+        Optional<ProductoDTO> dto = productoService.updateParcial(codigo, camposActualizados);
+
+        if (dto.isPresent()) {
+            return ResponseEntity.ok(dto.get());
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/dto/{codigo}")
+    public ResponseEntity<ProductoDTO> updateParcial(@Valid @RequestBody ProductoDTO productoDTO, @PathVariable String codigo) {
+
+        Optional<ProductoDTO> dto = productoService.updateParcialdto(codigo, productoDTO);
+
+        if (dto.isPresent()) {
+            return ResponseEntity.ok(dto.get());
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    // --------- CONF ------------------
+    @GetMapping("/values-conf")
+    public Map<String,String> values(){
+        Map<String,String> json = new HashMap<>();
+        json.put("code",code_conf);
+        json.put("message",message_conf);
+        return json;
+    }
+
+
+    @GetMapping("/values-conf2")
+    public Map<String,String> values(@Value("${config.daw.code}") String code, @Value("${config.daw.message}") String message){
+        Map<String,String> json = new HashMap<>();
+        json.put("code",code);
+        json.put("message",message);
+        return json;
+    }
 
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,7 +24,7 @@ public class Fabricante {
 
     // Relación 1:N con Producto
     @OneToMany(mappedBy = "fabricante", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Producto> productos;
+    private Set<Producto> productos;
 
 //    @Override
 //    public String toString() {
