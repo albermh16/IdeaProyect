@@ -159,7 +159,8 @@ public class ProductoController {
         return ResponseEntity.notFound().build();
     }
 
-    // --------- CONF ------------------
+
+    // ---------------- CONF -------------------------
     @GetMapping("/values-conf")
     public Map<String,String> values(){
         Map<String,String> json = new HashMap<>();
@@ -176,5 +177,6 @@ public class ProductoController {
         json.put("message",message);
         return json;
     }
+
 
 }

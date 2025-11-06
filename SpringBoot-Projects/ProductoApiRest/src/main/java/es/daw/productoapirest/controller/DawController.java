@@ -1,6 +1,6 @@
 package es.daw.productoapirest.controller;
 
-import es.daw.productoapirest.CONFIG.DawConfig;
+import es.daw.productoapirest.config.DawConfig;
 import es.daw.productoapirest.dto.DawResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DawController {
 
-    // INYECCION POR PROPIEDAD
+    // INYECCIÓN POR PROPIEDAD
 //    @Autowired
 //    private DawConfig dawConfig;
 
+    // INYECCIÓN POR CONSTRUCTOR
     private final DawConfig dawConfig;
+
+//    @Autowired
+//    public DawController(DawConfig dawConfig) {
+//        this.dawConfig = dawConfig;
+//    }
 
     @GetMapping("/values-conf-externo")
     public DawResponseDTO values() {
