@@ -85,7 +85,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**","/h2-console/**").permitAll() // pública para login/register
                         .requestMatchers(HttpMethod.GET,"/api/productos").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/productos").authenticated()
-                        .requestMatchers(HttpMethod.PUT,"/api/productos").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/api/productos/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

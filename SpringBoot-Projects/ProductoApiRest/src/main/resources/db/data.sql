@@ -25,5 +25,9 @@ INSERT INTO producto ( nombre, codigo, precio, codigo_fabricante) VALUES ( 'Impr
 -- Crear roles por defecto
 INSERT INTO roles (name) VALUES ('ROLE_USER');
 INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
+INSERT INTO roles (name) VALUES ('ROLE_MANAGER');
 
 -- No vamos a crear usuarios. Se crearán a través de un endpoint
+-- PENDIENTE!!! DAIS DE ALTA USUARIOS CON SUS CORRESPONDIENTES ROLES
+-- melola, melola: $2a$10$IKp9rdPtsq4/L28Ivj85yOI0nyTRwKX1fHZfXDAKRePHQUD2vATGK
+-- admin, melola: $2a$10$DAUbm8fxFsdFo.NBc.rNJOfCWF3KqgMvqK8XLDkfHrh8lR/zjTyTe
