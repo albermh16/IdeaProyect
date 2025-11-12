@@ -3,7 +3,6 @@ package es.daw.productoapirest.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -15,9 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.List;
 
 @Configuration
 @EnableMethodSecurity // Habilita @PreAuthorize y @PostAuthorize
@@ -83,9 +79,9 @@ public class SecurityConfig {
                 // Esto actúa antes del controlador
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**","/h2-console/**").permitAll() // pública para login/register
-                        .requestMatchers(HttpMethod.GET,"/api/productos").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/productos").authenticated()
-                        .requestMatchers(HttpMethod.PUT,"/api/productos/**").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.GET,"/api/productos").permitAll()
+//                        .requestMatchers(HttpMethod.POST,"/api/productos").authenticated()
+//                        .requestMatchers(HttpMethod.PUT,"/api/productos/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

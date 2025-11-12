@@ -38,7 +38,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody RegisterRequest request) {
 
         // 1. Comprobar si el usuario ya existe
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
@@ -68,18 +68,25 @@ public class AuthController {
 
         // 5. Respuesta detallada
         ApiResponse response = new ApiResponse(true, "Usuario registrado correctamente");
-        //response.addDetail("username", newUser.getUsername());
+        response.addDetail("username", newUser.getUsername());
         //response.addDetail("roles",newUser.getRoles().toString());
+        response.addDetail("roles",newUser.getRoles().stream()
+                .map(Role::getName)
+                .toList()
+        );
         System.out.println("****** newUser.getRoles():" + newUser.getRoles().toString());
 
-        //return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        //return ResponseEntity.ok().build();
     }
 
+    // -------------------------------------
     // PENDIENTE MEJORAS EN EL REGISTRO
-    // 1. SOLUCIONAR ERROR RESPUESTA APIRESPONSE
-    // 2. CREAR UN AUTHSERVICE Y QUITAR LA LÓGICA DE ESTE ENDPOINT (REPOSITORY ECT...)
-    // 3. TRABAJAR CON UserAlreadyExistsException Y RoleNotFoundException
+    // 1. SOLUCIONAR ERROR RESPUESTA APIRESPONSE --> Solucionado!!!
+    // 2. CREAR UN AUTHSERVICE Y QUITAR LA LÓGICA DE ESTE ENDPOINT (REPOSITORY ECT...) --> Para los alumnos!
+    // 3. TRABAJAR CON UserAlreadyExistsException Y RoleNotFoundException --> Para los alumnos!
+    // 4. poder dar de alta un usuario con más de un role
+    // --------------------------------
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request){

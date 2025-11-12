@@ -2,6 +2,8 @@ package es.daw.productoapirest.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,13 +24,18 @@ public class JwtService {
 
     // LO QUE HACEMOS NOSOTROS = En lugar de usar una clave fija en application.properties o .env, genera una nueva clave de forma dinámica.
     // Si usas SECRET_KEY generado dinámicamente en cada arranque, no podrás validar tokens emitidos en otra ejecución.
-    private final SecretKey SECRET_KEY = generateSecureKey();
+    //private final SecretKey SECRET_KEY = generateSecureKey();
 
     // Si lo cargo desde application.properties ... problemas de seguridad en producción
 //    @Value("${jwt.secret}")
 //    private String secret;
 
-    @Value("${jwt.expiration}")
+//    @Value("${jwt.expiration}")
+//    private String expiration;
+
+    @Value("${JWT_SECRET}")
+    private String secret;
+    @Value("${JWT_EXPIRATION}")
     private String expiration;
 
 
@@ -48,7 +55,10 @@ public class JwtService {
      * @return
      */
     private SecretKey getSigningKey() {
-        return SECRET_KEY;
+        //return SECRET_KEY;
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
+
     }
 
     /**

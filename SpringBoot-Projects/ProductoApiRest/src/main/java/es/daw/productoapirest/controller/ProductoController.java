@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +64,7 @@ public class ProductoController {
 
 
     @GetMapping
+    @PreAuthorize("permitAll()") //????
     public ResponseEntity<List<ProductoDTO>> findAll() {
         return ResponseEntity.ok(productoService.findAll());
     }
@@ -80,6 +82,7 @@ public class ProductoController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ProductoDTO> create(@Valid @RequestBody ProductoDTO productoDTO) {
         Optional<ProductoDTO> dto = productoService.create(productoDTO);
         if (dto.isPresent()) {
@@ -120,6 +123,7 @@ public class ProductoController {
 
 
     @PutMapping("/{codigo}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductoDTO> update(
             @PathVariable String codigo,
             @Valid @RequestBody ProductoDTO productoDTO

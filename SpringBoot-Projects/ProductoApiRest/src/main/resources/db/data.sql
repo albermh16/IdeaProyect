@@ -29,5 +29,8 @@ INSERT INTO roles (name) VALUES ('ROLE_MANAGER');
 
 -- No vamos a crear usuarios. Se crearán a través de un endpoint
 -- PENDIENTE!!! DAIS DE ALTA USUARIOS CON SUS CORRESPONDIENTES ROLES
--- melola, melola: $2a$10$IKp9rdPtsq4/L28Ivj85yOI0nyTRwKX1fHZfXDAKRePHQUD2vATGK
--- admin, melola: $2a$10$DAUbm8fxFsdFo.NBc.rNJOfCWF3KqgMvqK8XLDkfHrh8lR/zjTyTe
+INSERT INTO users (username, password) VALUES ('melola','$2a$10$IKp9rdPtsq4/L28Ivj85yOI0nyTRwKX1fHZfXDAKRePHQUD2vATGK');
+INSERT INTO users (username, password) VALUES ('admin','$2a$10$IKp9rdPtsq4/L28Ivj85yOI0nyTRwKX1fHZfXDAKRePHQUD2vATGK');
+
+INSERT INTO users_roles (role_id,user_id) VALUES(1,1); -- melola , USER
+INSERT INTO users_roles (role_id,user_id) VALUES(2,2); -- admin, ADMIN

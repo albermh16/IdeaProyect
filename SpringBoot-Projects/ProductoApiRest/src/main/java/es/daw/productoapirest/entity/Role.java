@@ -19,11 +19,21 @@ public class Role {
     @Column(unique = true, nullable = false)
     private String name;
 
+    // Relacional bidireccional. Role es el lado inverso.
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     public Role() {
         users = new HashSet<User>();
+    }
+
+    public void addUser(User user){
+        users.add(user);
+        //user.addRole(this); // llamada infinita!!!
+    }
+
+    public void removeUser(User user){
+        users.remove(user);
     }
 
     @Override

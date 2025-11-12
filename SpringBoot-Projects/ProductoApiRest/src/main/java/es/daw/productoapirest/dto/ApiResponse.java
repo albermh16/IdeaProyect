@@ -1,8 +1,11 @@
 package es.daw.productoapirest.dto;
 
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
 public class ApiResponse {
     private boolean sucess;
     private String message;
