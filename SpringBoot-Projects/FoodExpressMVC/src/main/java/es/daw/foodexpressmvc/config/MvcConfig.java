@@ -1,4 +1,4 @@
-package es.daw.foodexpressmvc.configuration;
+package es.daw.foodexpressmvc.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -12,7 +12,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("login");
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/error").setViewName("error");
-        registry.addViewController("/dashboard").setViewName("dashboard");
+        //registry.addViewController("/dashboard").setViewName("dashboard");
 
 
     }
