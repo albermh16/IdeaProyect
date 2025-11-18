@@ -17,7 +17,6 @@ import java.util.Optional;
 public class ProductoService {
     private final ProductoRepository productoRepository;
     private final FabricanteRepository fabricanteRepository;
-    private final ProductoService productoService;
     private final ProductoMapper productoMapper;
 
     public List<ProductoDTO> findAll(){
@@ -55,9 +54,9 @@ public class ProductoService {
         Producto producto = productoRepository.findByCodigo(codigo)
                         .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
-        dto.setNombre(dto.getNombre());
-        dto.setPrecio(dto.getPrecio());
-        dto.setCodigo(dto.getCodigo());
+        producto.setNombre(dto.getNombre());
+        producto.setPrecio(dto.getPrecio());
+        producto.setCodigo(dto.getCodigo());
 
         Optional<Fabricante> fabricanteOpt = fabricanteRepository.findById(dto.getCodigoFabricante());
 
@@ -72,7 +71,7 @@ public class ProductoService {
         return Optional.of(productoMapper.toDto(productoActualizado));
     }
 
-    public Optional<ProductoDTO> patch (String codigo, ProductoDTO dto) {
+    public Optional<ProductoDTO> parcialUpdate (String codigo, ProductoDTO dto) {
         Producto producto = productoRepository.findByCodigo(codigo)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
