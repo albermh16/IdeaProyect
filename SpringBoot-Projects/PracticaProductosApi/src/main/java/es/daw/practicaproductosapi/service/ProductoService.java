@@ -3,6 +3,7 @@ package es.daw.practicaproductosapi.service;
 import es.daw.practicaproductosapi.dto.ProductoDTO;
 import es.daw.practicaproductosapi.entity.Fabricante;
 import es.daw.practicaproductosapi.entity.Producto;
+import es.daw.practicaproductosapi.exception.ProductoNotFoundException;
 import es.daw.practicaproductosapi.mapper.ProductoMapper;
 import es.daw.practicaproductosapi.repository.FabricanteRepository;
 import es.daw.practicaproductosapi.repository.ProductoRepository;
@@ -52,7 +53,7 @@ public class ProductoService {
     public Optional<ProductoDTO> update(String codigo, ProductoDTO dto) {
 
         Producto producto = productoRepository.findByCodigo(codigo)
-                        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                        .orElseThrow(() -> new ProductoNotFoundException("Producto con codigo: " + codigo + " no encontrado"));
 
         producto.setNombre(dto.getNombre());
         producto.setPrecio(dto.getPrecio());
@@ -73,7 +74,7 @@ public class ProductoService {
 
     public Optional<ProductoDTO> parcialUpdate (String codigo, ProductoDTO dto) {
         Producto producto = productoRepository.findByCodigo(codigo)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new ProductoNotFoundException("Producto con codigo: " + codigo + " no encontrado"));
 
         if(dto.getNombre() != null) producto.setNombre(dto.getNombre());
         if(dto.getPrecio() != null) producto.setPrecio(dto.getPrecio());
@@ -97,7 +98,7 @@ public class ProductoService {
 
     public boolean deleteByCodigo(String codigo) {
         Producto producto = productoRepository.findByCodigo(codigo)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                .orElseThrow(() -> new ProductoNotFoundException("Producto con codigo: " + codigo + " no encontrado"));
 
         productoRepository.delete(producto);
         return true;
