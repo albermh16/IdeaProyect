@@ -1,7 +1,10 @@
 package es.daw.foodexpressapi.entity;
 
+import es.daw.foodexpressapi.dto.DishesDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "restaurants")
@@ -19,6 +22,7 @@ public class Restaurant {
 
     @Column(length = 20)
     private String phone;
+
 
 
 
