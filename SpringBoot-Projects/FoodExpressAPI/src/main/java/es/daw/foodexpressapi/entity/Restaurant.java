@@ -1,14 +1,13 @@
 package es.daw.foodexpressapi.entity;
 
-import es.daw.foodexpressapi.dto.DishesDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
-
-import java.util.List;
+import lombok.Setter;
 
 @Entity
 @Table(name = "restaurants")
 @Getter
+@Setter
 public class Restaurant {
 
     @Id
@@ -22,7 +21,6 @@ public class Restaurant {
 
     @Column(length = 20)
     private String phone;
-
 
 
 
