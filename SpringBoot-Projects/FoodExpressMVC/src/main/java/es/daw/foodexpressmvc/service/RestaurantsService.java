@@ -14,7 +14,12 @@ import java.util.List;
 public class RestaurantsService {
 
     private final WebClient webClientAPI;
+    private final ApiAuthService apiAuthService;
 
+    /**
+     * Público. Sin jwt
+     * @return
+     */
     public List<RestaurantDTO> getAllRestaurants(){
 
         RestaurantDTO[] restaurants;
@@ -36,6 +41,38 @@ public class RestaurantsService {
         return Arrays.asList(restaurants);
 
 
+    }
+
+    /**
+     * Con jwt
+     * @param dto
+     * @return
+     */
+    public RestaurantDTO create(RestaurantDTO dto){
+
+        String token = apiAuthService.getToken();
+
+        RestaurantDTO restaurant;
+
+        try {
+            restaurant = webClientAPI
+                    .post()
+                    .uri("/restaurants")
+                    .header("Authorization", "Bearer "+token)
+                    .bodyValue(dto)
+                    .retrieve()
+                    .bodyToMono(RestaurantDTO.class)
+                    .block(); //asíncrono
+        }catch (Exception e){
+            // Pendiente crear excepción propia
+            // Pendiente crear Globla ExceptionHancler: que lea la exceión y redirija a api-error
+            //
+            //throw new ConnectionApiRestException("Could not connect to FoodExpress API to create restaurant");
+            throw new ConnectionApiRestException(e.getMessage());
+        }
+
+        return restaurant;
 
     }
+
 }

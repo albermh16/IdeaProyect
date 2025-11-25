@@ -13,6 +13,7 @@ public interface ComprasMapper {
     @Mapping(target = "productosId", ignore = true)
     ComprasDTO toComprasDTO(Compras compras);
 
+    @Mapping(target="id", ignore = true)
     @Mapping(target="listaProductos", ignore = true)
     Compras toComprasEntity(ComprasDTO comprasDTO);
 

@@ -1,0 +1,3 @@
+2025-11-25 12:48:18.292355+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CATEGORIA" not found (this database is empty); SQL statement:
+INSERT INTO CATEGORIA (codigo, nombre, descripcion) VALUES ('CAT-2EST', '2 estrellas', 'Servicios básicos, ideal para presupuestos limitados') [42104-240]

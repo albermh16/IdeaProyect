@@ -20,11 +20,11 @@ public class ComprasDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @NotBlank(message = "El nombnre es obligatorio")
+    @NotBlank(message = "El nombre es obligatorio")
     private String cliente;
 
     @PastOrPresent
-    @JsonFormat(pattern = "yyyy-MM-dd' 'HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime fecha;
 
     @DecimalMin(value= "300",message = "el precio minimo son 800")

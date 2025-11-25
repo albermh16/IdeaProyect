@@ -16,3 +16,16 @@ INSERT INTO compra_producto (compra_id, producto_id) VALUES (2, 2);  -- Compra 2
 INSERT INTO compra_producto (compra_id, producto_id) VALUES (2, 4);  -- Compra 2 -> Monitor 24"
 INSERT INTO compra_producto (compra_id, producto_id) VALUES (3, 5);  -- Compra 3 -> Auriculares Inalámbricos
 INSERT INTO compra_producto (compra_id, producto_id) VALUES (3, 1);  -- Compra 3 -> Laptop
+
+
+INSERT INTO roles (name) VALUES ('ROLE_USER');
+INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
+INSERT INTO roles (name) VALUES ('ROLE_MANAGER');
+
+-- No vamos a crear usuarios. Se crearán a través de un endpoint
+-- PENDIENTE!!! DAIS DE ALTA USUARIOS CON SUS CORRESPONDIENTES ROLES
+INSERT INTO users (username, password) VALUES ('alberto','$2a$10$k0bntjFZz6EJYt3WVHEgaOHmx30GeIYkVPv0A8eUcLgYFpSC9ziC2');
+INSERT INTO users (username, password) VALUES ('admin','$2a$10$MrYwd1pWfX8iiAAqTOAK9OATLVkvvwIGZQEVzfHa6GNcjadcPrGkO');
+
+INSERT INTO users_roles (role_id,user_id) VALUES(1,1); -- melola , USER
+INSERT INTO users_roles (role_id,user_id) VALUES(2,2);

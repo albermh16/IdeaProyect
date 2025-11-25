@@ -25,7 +25,7 @@ public class RestaurantController {
     }
 
     @PostMapping
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RestaurantDTO> create(@RequestBody RestaurantDTO restaurantDTO) {
 
         Optional<RestaurantDTO> result = restaurantService.create(restaurantDTO);
@@ -38,5 +38,16 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (restaurantService.delete(id)) {
+            return ResponseEntity.noContent().build();  // 204 NO CONTENT
+        } else {
+            return ResponseEntity.notFound().build();   // 404 NOT FOUND
+        }
+    }
+
 
 }
