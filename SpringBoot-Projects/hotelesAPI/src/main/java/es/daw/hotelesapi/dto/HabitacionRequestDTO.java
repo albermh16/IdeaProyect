@@ -1,5 +1,6 @@
 package es.daw.hotelesapi.dto;
 
+import es.daw.hotelesapi.entity.Hotel;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +10,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class HabitacionDTO {
+public class HabitacionRequestDTO {
 
     @NotBlank(message = "El codigo es obligatorio")
     @Size(min = 9, max = 9, message = "El codigo debe tener 9 caracteres")
@@ -21,13 +22,13 @@ public class HabitacionDTO {
     private boolean doble;
 
     @DecimalMin(value = "30.0", message = "El precio debe ser superior a 29")
-    private BigDecimal precio_noche;
+    private BigDecimal precioNoche;
 
-    private boolean incluye_desayuno;
+    private boolean incluyeDesayuno;
 
-    private boolean ocupada;
 
-    private String codigoHotel;
+    private Hotel hotel;
+
 
 }
 

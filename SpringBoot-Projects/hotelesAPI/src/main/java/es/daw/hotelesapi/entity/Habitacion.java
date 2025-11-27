@@ -1,9 +1,7 @@
 package es.daw.hotelesapi.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -12,6 +10,8 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Habitacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +27,10 @@ public class Habitacion {
     private boolean doble;
 
     @Column(name = "precio_noche", nullable = false)
-    private BigDecimal precio_noche;
+    private BigDecimal precioNoche;
 
     @Column(name = "incluye_desayuno", nullable = false)
-    private boolean incluye_desayuno;
+    private boolean incluyeDesayuno;
 
     @Column(name = "ocupada", nullable = false)
     private boolean ocupada;
