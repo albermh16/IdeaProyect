@@ -1,10 +1,7 @@
 package es.daw.hotelesapi.dto;
 
 import es.daw.hotelesapi.entity.Hotel;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -13,21 +10,23 @@ import java.math.BigDecimal;
 public class HabitacionRequestDTO {
 
     @NotBlank(message = "El codigo es obligatorio")
-    @Size(min = 9, max = 9, message = "El codigo debe tener 9 caracteres")
+    @NotNull
+
     private String codigo;
 
     @NotNull(message = "Debes elegir una opcion")
+    @Min(value = 10, message = "El tamaño de la habitacion debe ser superior a 10m cuadrados")
     private Integer tamano;
 
     private boolean doble;
 
-    @DecimalMin(value = "30.0", message = "El precio debe ser superior a 29")
+
+    @Min(value = 1, message = "El precio por noche debe ser mayor a 0")
     private BigDecimal precioNoche;
 
     private boolean incluyeDesayuno;
 
 
-    private Hotel hotel;
 
 
 }

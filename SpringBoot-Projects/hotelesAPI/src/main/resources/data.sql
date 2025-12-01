@@ -33,19 +33,19 @@ INSERT INTO HABITACION (codigo, tamano, doble, precio_noche, incluye_desayuno, o
 INSERT INTO HABITACION (codigo, tamano, doble, precio_noche, incluye_desayuno, ocupada, hotel_id) VALUES ('HAB-018-A', 25, true, 90.0, false, true, 6);
 
 
--- ROLES Y USUARIOS DE EJEMPLO!!!!!
+--ROLES Y USUARIOS DE EJEMPLO!!!!!
 INSERT INTO roles (name) VALUES ('ROLE_USER');
 INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
 INSERT INTO roles (name) VALUES ('ROLE_PROFESOR');
 
-INSERT INTO users (username, password) VALUES ('admin', '$2a$10$Ey/H5tNIopwhtVYXQ76Ms.oeiol3A4NiG3/HJekFyKkmgLVbR1n1C');
-INSERT INTO users (username, password) VALUES ('user', '$2a$10$XVgKh.17he10CTo6Av57xOlSpnQWYxVJyshfkxjPKFLGTfth7FQZy');
+INSERT INTO users (username, password) VALUES ('admin', '$2a$10$T62BZ7huxux1XX2o.3p8cuY0dNzDqOlnEYm799tDIfPFQJaHYa772');
+INSERT INTO users (username, password) VALUES ('user', '$2a$10$QYdCokeIcwmXnhDoBK5g0em1U.TO1pkUsuP2NXEuJX6ZPtNOs4cLe');
 INSERT INTO users (username, password) VALUES ('profesor', '$2a$10$Ey/H5tNIopwhtVYXQ76Ms.oeiol3A4NiG3/HJekFyKkmgLVbR1n1C');
 
 
 INSERT INTO users_roles (role_id,user_id) VALUES(2,1);
 INSERT INTO users_roles (role_id,user_id) VALUES(1,2);
 INSERT INTO users_roles (role_id, user_id) VALUES (3, 3);
---INSERT INTO users_roles (role_id, user_id) VALUES (1, 3);
+INSERT INTO users_roles (role_id, user_id) VALUES (1, 3);
 
--- pendiente: añadir más roles a usuarios
+--pendiente: añadir más roles a usuarios

@@ -5,8 +5,11 @@ import es.daw.hotelesapi.dto.HotelRequestDTO;
 import es.daw.hotelesapi.dto.HotelResponseDTO;
 import es.daw.hotelesapi.entity.Categoria;
 import es.daw.hotelesapi.entity.Hotel;
+import es.daw.hotelesapi.exceptions.CategoriaNotFoundException;
+import es.daw.hotelesapi.exceptions.HotelNotFoundException;
 import es.daw.hotelesapi.repository.CategoriaRespository;
 import es.daw.hotelesapi.repository.HotelRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +17,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class HotelService {
 
-    private HotelRepository hotelRepository;
-    private CategoriaRespository categoriaRespository;
+    private final HotelRepository hotelRepository;
+    private final CategoriaRespository categoriaRespository;
 
 
-    public List<HotelResponseDTO> buscarHoteles(String codigoCategoria, String localidad) {
+    public List<HotelResponseDTO> buscarHoteles(String localidad, String codigoCategoria) {
         List<Hotel> hoteles;
 
         if(localidad != null){
@@ -40,13 +44,18 @@ public class HotelService {
 
     public HotelResponseDTO crearHotel(HotelRequestDTO dto) {
         Categoria categoria = categoriaRespository.findByCodigo(dto.getCodigoCategoria())
-                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+                .orElseThrow(() -> new CategoriaNotFoundException(dto.getCodigoCategoria()));
 
         Hotel hotel = toEntity(dto, categoria);
 
         Hotel hotelGuardado = hotelRepository.save(hotel);
 
         return toDTO(hotelGuardado);
+    }
+
+    public Hotel getByCodigo(String codigo) {
+        return hotelRepository.findByCodigo(codigo)
+                .orElseThrow(() -> new HotelNotFoundException(codigo));
     }
 
 

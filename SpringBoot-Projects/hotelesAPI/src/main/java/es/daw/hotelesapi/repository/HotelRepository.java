@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
-    Hotel findByCodigo(String codigo);
+    Optional<Hotel> findByCodigo(String codigo);
     List<Hotel> findByCategoria_Codigo(String codigoCategoria);
     List<Hotel> findByLocalidadIsIgnoreCase(String localidad);
 }

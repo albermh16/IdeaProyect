@@ -4,20 +4,25 @@ import es.daw.hotelesapi.dto.HabitacionRequestDTO;
 import es.daw.hotelesapi.dto.HabitacionResponseDTO;
 import es.daw.hotelesapi.entity.Habitacion;
 import es.daw.hotelesapi.entity.Hotel;
+import es.daw.hotelesapi.exceptions.HabitacionNotFoundException;
 import es.daw.hotelesapi.repository.HabitacionRepository;
 import es.daw.hotelesapi.repository.HotelRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class HabitacionService {
 
-    private HabitacionRepository habitacionRepository;
-    private HotelRepository hotelRepository;
+    private final HabitacionRepository habitacionRepository;
+    private final HotelRepository hotelRepository;
+    private final HotelService hotelService;
 
-    private List<HabitacionResponseDTO> buscarHabitacion(String codigoHotel, Integer tamanoMin, BigDecimal precioMin, BigDecimal precioMax) {
+    public List<HabitacionResponseDTO> buscarHabitacion(String codigoHotel, Integer tamanoMin, BigDecimal precioMin, BigDecimal precioMax) {
 
         hotelRepository.findByCodigo(codigoHotel);
 
@@ -36,13 +41,33 @@ public class HabitacionService {
     }
 
     public HabitacionResponseDTO crearHabitacion(HabitacionRequestDTO dto, String codigoHotel) {
-        Hotel hotel = hotelRepository.findByCodigo(codigoHotel);
+        Hotel hotel = hotelService.getByCodigo(codigoHotel);
+
+
         Habitacion habitacion = toEntity(dto, hotel);
 
         Habitacion habitacionGuardada = habitacionRepository.save(habitacion);
 
         return toDTO(habitacionGuardada);
     }
+
+    public HabitacionResponseDTO ocupar (String codigoHabitacion){
+        Habitacion habitacion = habitacionRepository.findByCodigo(codigoHabitacion)
+                .orElseThrow(() ->  new HabitacionNotFoundException(codigoHabitacion));
+
+        habitacion.setOcupada(true);
+
+        return toDTO(habitacionRepository.save(habitacion));
+    }
+
+    public void borrar(String codigoHabitacion){
+
+        Habitacion habitacion  = habitacionRepository.findByCodigo(codigoHabitacion)
+                .orElseThrow(() -> new HabitacionNotFoundException(codigoHabitacion));
+
+        habitacionRepository.delete(habitacion);
+    }
+
 
 
 

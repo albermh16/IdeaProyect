@@ -24,6 +24,7 @@ public class RestaurantController {
 
     }
 
+    // MEJORABLE, PORQUE EL SERVICIO NO DEVUELVE UN OPTIONAL..
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RestaurantDTO> create(@RequestBody RestaurantDTO restaurantDTO) {
@@ -47,6 +48,16 @@ public class RestaurantController {
         } else {
             return ResponseEntity.notFound().build();   // 404 NOT FOUND
         }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}")
+    public ResponseEntity<RestaurantDTO> update(@PathVariable Long id,
+                                                @RequestBody RestaurantDTO restaurantDTO) {
+
+        return ResponseEntity.ok(restaurantService.update(id, restaurantDTO));
+
+
     }
 
 
