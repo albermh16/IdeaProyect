@@ -15,8 +15,10 @@ public class OrderMapper {
 
     public OrderResponseDTO toDTO(Order order){
         OrderResponseDTO dto = new OrderResponseDTO();
+
+        dto.setId(order.getId());
         dto.setOrderDate(order.getOrderDate());
-        dto.setStatus(order.getStatus());
+        dto.setStatus(String.valueOf(order.getStatus()));
 
         User user = order.getUser();
         dto.setUserId(user.getId());

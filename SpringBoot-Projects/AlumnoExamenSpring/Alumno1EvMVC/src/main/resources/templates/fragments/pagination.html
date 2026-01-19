@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+ Fragment 1: Controles de paginación/orden.
+ PARAMETROS:
+  - actionUrl: ruta del listado (ej: '/dishes')
+  - size: tamaño de página actual
+  - sort: campo actual de ordenación
+  - dir: dirección actual (asc/desc)
+-->
+<div th:fragment="pageControls(actionUrl, size, sort, dir)" class="mb-3">
+
+    <form class="row g-2 align-items-end"
+          th:action="@{${actionUrl}}"
+          method="get">
+
+        <!-- Importante:
+             al cambiar size/sort/dir queremos volver a la página 0 para no caer en una página inexistente
+        -->
+        <input type="hidden" name="page" value="0"/>
+
+        <div class="col-auto">
+            <label class="form-label mb-0">Rows</label>
+            <select class="form-select" name="size" onchange="this.form.submit()">
+                <option value="5"  th:selected="${size == 5}">5</option>
+                <option value="10" th:selected="${size == 10}">10</option>
+                <option value="20" th:selected="${size == 20}">20</option>
+                <option value="50" th:selected="${size == 50}">50</option>
+            </select>
+        </div>
+
+        <div class="col-auto">
+            <label class="form-label mb-0">Sort by</label>
+            <select class="form-select" name="sort" onchange="this.form.submit()">
+                <option value="name"     th:selected="${sort == 'name'}">Name</option>
+                <option value="category" th:selected="${sort == 'category'}">Category</option>
+                <option value="price"    th:selected="${sort == 'price'}">Price</option>
+            </select>
+        </div>
+
+        <div class="col-auto">
+            <label class="form-label mb-0">Direction</label>
+            <select class="form-select" name="dir" onchange="this.form.submit()">
+                <option value="asc"  th:selected="${dir == 'asc'}">ASC</option>
+                <option value="desc" th:selected="${dir == 'desc'}">DESC</option>
+            </select>
+        </div>
+
+    </form>
+</div>
+
+
+<!--
+ Fragment 2: Paginador con Previous / número de páginas / Next.
+ PARAMETROS:
+  - actionUrl: ruta del listado (ej: '/dishes')
+  - pageObj: objeto Page (lo que tú llamas page, dishesPage, etc.)
+  - size/sort/dir: para mantener los filtros al navegar
+-->
+<nav th:fragment="pager(actionUrl, pageObj, size, sort, dir)"
+     class="mt-4"
+     th:if="${pageObj.totalPages > 1}">
+
+    <ul class="pagination justify-content-center">
+
+        <li class="page-item" th:classappend="${pageObj.first} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{${actionUrl}(page=${pageObj.number - 1}, size=${size}, sort=${sort}, dir=${dir})}">
+                Previous
+            </a>
+        </li>
+
+        <li class="page-item"
+            th:each="i : ${#numbers.sequence(0, pageObj.totalPages - 1)}"
+            th:classappend="${i == pageObj.number} ? 'active'">
+            <a class="page-link"
+               th:text="${i + 1}"
+               th:href="@{${actionUrl}(page=${i}, size=${size}, sort=${sort}, dir=${dir})}">
+            </a>
+        </li>
+
+        <li class="page-item" th:classappend="${pageObj.last} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{${actionUrl}(page=${pageObj.number + 1}, size=${size}, sort=${sort}, dir=${dir})}">
+                Next
+            </a>
+        </li>
+
+    </ul>
+</nav>
+
+<!-- ========================= -->
+<!-- Fragmento: Controls CON filtros -->
+<!-- ========================= -->
+<div th:fragment="pageControlsWithFilter(actionUrl, size, sort, dir, filter)" class="mb-3">
+
+    <form class="row g-2 align-items-end"
+          th:action="@{${actionUrl}}"
+          method="get">
+
+        <!-- Mantener filtros al cambiar size/sort/dir -->
+        <input type="hidden" name="status"
+               th:value="${filter != null and !#strings.isEmpty(filter.status)} ? filter.status : ''"/>
+
+        <input type="hidden" name="userId"
+               th:value="${filter != null and filter.userId != null} ? filter.userId : ''"/>
+
+        <input type="hidden" name="restaurantId"
+               th:value="${filter != null and filter.restaurantId != null} ? filter.restaurantId : ''"/>
+
+        <!-- Al cambiar size/sort/dir vuelves a página 0 -->
+        <input type="hidden" name="page" value="0"/>
+
+        <div class="col-auto">
+            <label class="form-label mb-0">Rows</label>
+            <select class="form-select" name="size" onchange="this.form.submit()">
+                <option value="5"  th:selected="${size == 5}">5</option>
+                <option value="10" th:selected="${size == 10}">10</option>
+                <option value="20" th:selected="${size == 20}">20</option>
+                <option value="50" th:selected="${size == 50}">50</option>
+            </select>
+        </div>
+
+        <div class="col-auto">
+            <label class="form-label mb-0">Sort by</label>
+            <select class="form-select" name="sort" onchange="this.form.submit()">
+                <option value="status"    th:selected="${sort == 'status'}">Status</option>
+                <option value="orderDate" th:selected="${sort == 'orderDate'}">Order date</option>
+                <option value="id"        th:selected="${sort == 'id'}">Id</option>
+            </select>
+        </div>
+
+        <div class="col-auto">
+            <label class="form-label mb-0">Direction</label>
+            <select class="form-select" name="dir" onchange="this.form.submit()">
+                <option value="asc"  th:selected="${dir == 'asc'}">ASC</option>
+                <option value="desc" th:selected="${dir == 'desc'}">DESC</option>
+            </select>
+        </div>
+
+    </form>
+</div>
+
+
+<!-- ========================= -->
+<!-- Fragmento: Pager CON filtros -->
+<!-- ========================= -->
+<nav th:fragment="pagerWithFilter(actionUrl, pageObj, size, sort, dir, filter)"
+     class="mt-4"
+     th:if="${pageObj.totalPages > 1}">
+
+    <ul class="pagination justify-content-center">
+
+        <li class="page-item" th:classappend="${pageObj.first} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{${actionUrl}(
+                    page=${pageObj.number - 1},
+                    size=${size},
+                    sort=${sort},
+                    dir=${dir},
+                    status=${filter != null and !#strings.isEmpty(filter.status) ? filter.status : null},
+                    userId=${filter != null ? filter.userId : null},
+                    restaurantId=${filter != null ? filter.restaurantId : null}
+               )}">
+                Previous
+            </a>
+        </li>
+
+        <li class="page-item"
+            th:each="i : ${#numbers.sequence(0, pageObj.totalPages - 1)}"
+            th:classappend="${i == pageObj.number} ? 'active'">
+            <a class="page-link"
+               th:text="${i + 1}"
+               th:href="@{${actionUrl}(
+                    page=${i},
+                    size=${size},
+                    sort=${sort},
+                    dir=${dir},
+                    status=${filter != null and !#strings.isEmpty(filter.status) ? filter.status : null},
+                    userId=${filter != null ? filter.userId : null},
+                    restaurantId=${filter != null ? filter.restaurantId : null}
+               )}">
+            </a>
+        </li>
+
+        <li class="page-item" th:classappend="${pageObj.last} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{${actionUrl}(
+                    page=${pageObj.number + 1},
+                    size=${size},
+                    sort=${sort},
+                    dir=${dir},
+                    status=${filter != null and !#strings.isEmpty(filter.status) ? filter.status : null},
+                    userId=${filter != null ? filter.userId : null},
+                    restaurantId=${filter != null ? filter.restaurantId : null}
+               )}">
+                Next
+            </a>
+        </li>
+
+    </ul>
+</nav>
+
+
+</body>
+</html>

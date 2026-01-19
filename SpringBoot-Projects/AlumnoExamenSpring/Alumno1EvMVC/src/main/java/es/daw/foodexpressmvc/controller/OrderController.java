@@ -1,6 +1,8 @@
 package es.daw.foodexpressmvc.controller;
 
+import es.daw.foodexpressmvc.dto.OrderFilterDTO;
 import es.daw.foodexpressmvc.dto.OrderResponseDTO;
+import es.daw.foodexpressmvc.dto.PageResponse;
 import es.daw.foodexpressmvc.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Or;
@@ -20,22 +22,46 @@ public class OrderController {
 
     private final OrderService orderService;
 
+//    @GetMapping
+//    public String showOrdersPage(Model model,
+//                                 @RequestParam(defaultValue = "0") int page,
+//                                 @RequestParam(defaultValue = "5") int size,
+//                                 @RequestParam(defaultValue = "name") String sort,
+//                                 @RequestParam(defaultValue = "asc") String dir
+//                                 ){
+//        PageResponse<OrderResponseDTO> orders = orderService.buscar(null, null, null,
+//                                                                    page, size, sort, dir);
+//
+//        model.addAttribute("size", size);
+//        model.addAttribute("sort", sort);
+//        model.addAttribute("dir", dir);
+//
+//        model.addAttribute("page", orders);
+//        model.addAttribute("filter", new OrderFilterDTO());
+//        model.addAttribute("orders", orders.getContent());
+//
+//        return "orders/orders-list";
+//    }
+
     @GetMapping
-    public String showOrdersPage(Model model){
-        List<OrderResponseDTO> orders = orderService.buscar(null, null, null);
+    public String buscarOrders(@ModelAttribute("filter") OrderFilterDTO filter,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "5") int size,
+                               @RequestParam(defaultValue = "status") String sort,
+                               @RequestParam(defaultValue = "asc") String dir,
+                               Model model){
+        PageResponse<OrderResponseDTO> orders = orderService.buscar(filter.getStatus(),
+                                                                    filter.getUserId(),
+                                                                    filter.getRestaurantId(),
+                                                                    page, size, sort, dir);
 
-        model.addAttribute("filter", new OrderResponseDTO());
-        model.addAttribute("orders", orders);
-
-        return "orders/orders-list";
-    }
-
-    @GetMapping("/search")
-    public String buscarOrders(@ModelAttribute("filter") OrderResponseDTO filter, Model model){
-        List<OrderResponseDTO> orders = orderService.buscar(filter.getStatus(), filter.getUserId(), filter.getRestaurantId());
+        model.addAttribute("page", orders);
+        model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
 
         model.addAttribute("filter", filter);
-        model.addAttribute("orders", orders);
+        model.addAttribute("orders", orders.getContent());
 
         return "orders/orders-list";
     }

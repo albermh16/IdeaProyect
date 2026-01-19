@@ -1,19 +1,26 @@
 package es.daw.foodexpressapi.service;
 
+import es.daw.foodexpressapi.dto.CreateOrderDTO;
+import es.daw.foodexpressapi.dto.CreateOrderItemDTO;
 import es.daw.foodexpressapi.dto.OrderResponseDTO;
-import es.daw.foodexpressapi.entity.Order;
+import es.daw.foodexpressapi.dto.OrderSummaryDTO;
+import es.daw.foodexpressapi.entity.*;
 import es.daw.foodexpressapi.enums.OrderStatus;
 import es.daw.foodexpressapi.exception.InvalidStatusException;
 import es.daw.foodexpressapi.exception.RestaurantNotFoundException;
 import es.daw.foodexpressapi.exception.UserNotFoundException;
 import es.daw.foodexpressapi.mapper.OrderMapper;
-import es.daw.foodexpressapi.repository.OrderRepository;
-import es.daw.foodexpressapi.repository.RestaurantRepository;
-import es.daw.foodexpressapi.repository.UserRepository;
+import es.daw.foodexpressapi.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,26 +32,23 @@ public class OrderService {
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
     private final OrderMapper orderMapper;
+    private final DishRepository dishRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
-    public List<OrderResponseDTO> buscar(String status, Long userId, Long restaurantId){
+    public Page<OrderResponseDTO> filterOrders(String status, Long userId, Long restaurantId, Pageable pageable){
 
-        List<Order> orders;
+        OrderStatus statusEnum = null;
 
-        //Validar STATUS
         if(status != null && !status.isBlank()){
             try{
-                OrderStatus enumStatus = OrderStatus.valueOf(status.toUpperCase());
-                status = enumStatus.name();
-            } catch (IllegalArgumentException e){
-                throw new InvalidStatusException("Invalid status: "+ status);
+                statusEnum = OrderStatus.valueOf(status.trim().toUpperCase());
+            } catch (IllegalArgumentException ex){
+                throw new InvalidStatusException("Invalid status:" + status);
             }
-        } else{
-            status = null;
+
         }
 
-        //Validar existencia userId / restaurantId
-
-        if(userId != null && !userRepository.existsById(userId)){
+        if(userId != null  && !userRepository.existsById(userId)){
             throw new UserNotFoundException(userId);
         }
 
@@ -52,39 +56,87 @@ public class OrderService {
             throw new RestaurantNotFoundException(restaurantId);
         }
 
+        Page<Order> orders = orderRepository.findByFilters(statusEnum, userId, restaurantId, pageable);
 
-        if(status != null && userId != null && restaurantId != null){
-           orders = orderRepository.findByStatusAndRestaurant_IdAndUser_Id(status, restaurantId, userId);
+        return orders.map(orderMapper::toDTO);
+    }
 
-        } else if( status != null && userId != null ){
 
-            orders = orderRepository.findByStatusAndUser_Id(status, userId);
+    public Page<OrderSummaryDTO> getOrderSumaries(Pageable pageable){
+        return orderRepository.getAllOrderSummaries(pageable);
+    }
 
-        } else if( status != null  && restaurantId != null){
+    @Transactional
+    public OrderSummaryDTO createOrder(CreateOrderDTO dto){
+        if(dto.items().isEmpty()) throw new RuntimeException("No existen platos en la orden");
 
-            orders = orderRepository.findByStatusAndRestaurant_Id(status, restaurantId);
+        User user = userRepository.findById(dto.userId())
+                .orElseThrow( () -> new UserNotFoundException(dto.userId()));
 
-        } else if( restaurantId != null && userId != null){
+        Restaurant restaurant = restaurantRepository.findById(dto.restaurantId())
+                .orElseThrow( () -> new RestaurantNotFoundException(dto.restaurantId()));
 
-            orders = orderRepository.findByRestaurant_IdAndUser_Id(restaurantId, userId);
 
-        } else if ( status != null) {
+        Order order = new Order();
+        order.setUser(user);
+        order.setRestaurant(restaurant);
+        order.setStatus(OrderStatus.CREADO);
+        order.setOrderDate(LocalDateTime.now());
 
-            orders = orderRepository.findByStatus(status);
+        orderRepository.save(order);
 
-        } else if ( userId != null) {
+        long totalItems = 0L;
+        BigDecimal totalAmount = BigDecimal.ZERO;
 
-            orders = orderRepository.findByUser_Id(userId);
+        for(CreateOrderItemDTO item : dto.items()){
+            Dish dish = dishRepository.findById(item.dishId())
+                    .orElseThrow( () -> new EntityNotFoundException("Dish not found: " + item.dishId()));
 
-        } else if ( restaurantId != null) {
+            if(dish.getRestaurant() == null || dish.getRestaurant().getId() == null || !dish.getRestaurant().getId().equals(dto.restaurantId())){
+                throw new IllegalArgumentException("Dish " + dish.getId() + "no corresponde con el restaurante " + dto.restaurantId());
+            }
 
-            orders = orderRepository.findByRestaurant_Id(restaurantId);
+            BigDecimal unitPrice = dish.getPrice();
+            if(unitPrice == null){
+                throw new IllegalArgumentException("Dish price is null for dishId");
+            }
 
-        } else {
-            orders = orderRepository.findAll();
+            int qty = item.quantity();
+
+            BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(qty));
+
+            OrderDetails details = new OrderDetails();
+            details.setOrder(order);
+            details.setDish(dish);
+            details.setQuantity(qty);
+            details.setSubtotal(subtotal);
+
+            details.setOrderDetailId(new OrderDetailId(order.getId(), dish.getId()));
+
+            orderDetailRepository.save(details);
+
+            totalAmount = totalAmount.add(subtotal);
+            totalItems += qty;
+
+
         }
 
+        return new OrderSummaryDTO(
+                order.getId(),
+                user.getUsername(),
+                restaurant.getName(),
+                OrderStatus.CREADO,
+                order.getOrderDate(),
+                totalItems,
+                totalAmount
+        );
 
-        return orders.stream().map(orderMapper::toDTO).toList();
+
+
+
+
+
+
+
     }
 }

@@ -2,8 +2,10 @@ package es.daw.foodexpressmvc.service;
 
 import es.daw.foodexpressmvc.dto.ErrorDTO;
 import es.daw.foodexpressmvc.dto.OrderResponseDTO;
+import es.daw.foodexpressmvc.dto.PageResponse;
 import es.daw.foodexpressmvc.exception.ConnectionApiRestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,14 +20,23 @@ public class OrderService {
 
     private final WebClient webClientAPI;
 
-    public List<OrderResponseDTO> buscar(String status, Long userId, Long restaurantId){
+    public PageResponse<OrderResponseDTO> buscar(String status,
+                                                 Long userId,
+                                                 Long restaurantId,
+                                                 int page,
+                                                 int size,
+                                                 String sort,
+                                                 String dir){
 
 
 
-        OrderResponseDTO[] orders = webClientAPI
+        PageResponse<OrderResponseDTO> orders = webClientAPI
                 .get()
                 .uri(uriBuilder -> {
-                    var b = uriBuilder.path("/orders");
+                    var b = uriBuilder.path("/orders")
+                            .queryParam("page", page)
+                            .queryParam("size", size)
+                            .queryParam("sort", sort + "," + dir);
                     if(status != null && !status.isBlank()) b = b.queryParam("status", status);
                     if(userId != null) b = b.queryParam("userId", userId);
                     if(restaurantId != null) b = b.queryParam("restaurantId", restaurantId);
@@ -34,10 +45,11 @@ public class OrderService {
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(ErrorDTO.class)
                         .map(err -> new ConnectionApiRestException(err.getMessage())))
-                .bodyToMono(OrderResponseDTO[].class)
+                .bodyToMono(new ParameterizedTypeReference<PageResponse<OrderResponseDTO>>() {
+                })
                 .block();
 
-        return orders == null ? List.of() : Arrays.asList(orders);
+        return orders == null ? new PageResponse<>() : orders;
     }
 
 }

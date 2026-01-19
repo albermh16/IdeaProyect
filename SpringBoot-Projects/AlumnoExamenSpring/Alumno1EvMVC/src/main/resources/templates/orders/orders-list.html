@@ -7,13 +7,7 @@
 </head>
 
 <body class="bg-light">
-
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-        <span class="navbar-brand">FoodExpress</span>
-        <a th:href="@{/dashboard}" class="btn btn-outline-light btn-sm">Back</a>
-    </div>
-</nav>
+<div th:replace="fragments/layout :: navbar('orders')"></div>
 
 <div class="container mt-4">
 
@@ -25,7 +19,7 @@
     </div>
 
     <!-- FILTER FORM -->
-    <form th:action="@{/orders/search}" method="get" th:object="${filter}" class="row g-3 mb-4">
+    <form th:action="@{/orders}" method="get" th:object="${filter}" class="row g-3 mb-4">
 
         <div class="col-md-4">
             <label class="form-label">Status</label>
@@ -56,6 +50,8 @@
             No orders found for the selected filters.
         </div>
 
+        <div th:replace="~{fragments/pagination :: pageControlsWithFilter('/orders', ${size}, ${sort}, ${dir}, ${filter})}"></div>
+
         <!-- RESULTS TABLE -->
         <table th:if="${!#lists.isEmpty(orders)}" class="table table-striped">
             <thead class="table-dark">
@@ -65,6 +61,7 @@
                 <th>Status</th>
                 <th>User</th>
                 <th>Restaurant</th>
+                <th>Actions</th>
             </tr>
             </thead>
 
@@ -75,12 +72,22 @@
                 <td th:text="${o.status}"></td>
                 <td th:text="${o.username}"></td>
                 <td th:text="${o.restaurantName}"></td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary"
+                       th:href="@{order-details/order/{id}/details(id=${o.id})}">
+                        Details
+                    </a>
+                </td>
             </tr>
             </tbody>
         </table>
+
+        <div th:replace="~{fragments/pagination :: pagerWithFilter('/orders', ${page}, ${size}, ${sort}, ${dir}, ${filter})}"></div>
     </div>
 
 </div>
+
+<div th:replace="fragments/layout :: footer"></div>
 
 </body>
 </html>

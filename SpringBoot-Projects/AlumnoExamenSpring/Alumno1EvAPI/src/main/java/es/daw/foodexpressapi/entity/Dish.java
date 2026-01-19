@@ -1,9 +1,12 @@
 package es.daw.foodexpressapi.entity;
 
+import es.daw.foodexpressapi.enums.DishCategory;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "dishes")
@@ -20,11 +23,17 @@ public class Dish {
     @Column(nullable = false)
     private BigDecimal price;
 
-    private String category;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DishCategory category;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
+
+    @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY)
+    private List<OrderDetails> orderDetails = new ArrayList<>();
+
 
 
 }

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Details – FoodExpress</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand" th:text="'Order Details - #' + ${orderId}">Order Details</span>
+        <a th:href="@{/orders}" class="btn btn-outline-light btn-sm">Back</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <h2 class="mb-3" th:text="'Order #' + ${orderId} + ' - Details'">Order Details</h2>
+
+    <!-- ERROR MESSAGE -->
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- NO DETAILS -->
+    <div th:if="${details == null || #lists.isEmpty(details)}" class="alert alert-warning">
+        No details found for this order.
+    </div>
+
+    <!-- DETAILS TABLE -->
+    <table th:if="${details != null && !#lists.isEmpty(details)}" class="table table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Dish</th>
+            <th>Category</th>
+            <th class="text-end">Price (€)</th>
+            <th class="text-center">Quantity</th>
+            <th class="text-end">Subtotal (€)</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="d : ${details}">
+            <td th:text="${d.dishName}"></td>
+            <td th:text="${d.category}"></td>
+            <td class="text-end" th:text="${d.price}"></td>
+            <td class="text-center" th:text="${d.quantity}"></td>
+            <td class="text-end" th:text="${d.subtotal}"></td>
+        </tr>
+        </tbody>
+
+        <!-- TOTAL (opcional, pero útil) -->
+        <tfoot>
+        <tr>
+            <th colspan="4" class="text-end">Total</th>
+            <th class="text-end"
+                th:text="${#numbers.formatDecimal(#aggregates.sum(details.![subtotal]), 1, 2)}">
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+
+</div>
+
+</body>
+</html>

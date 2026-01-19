@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -23,7 +25,8 @@ public class Order {
     private LocalDateTime orderDate;
 
     @Column(nullable = false, length = 30)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id",nullable = false)
@@ -32,4 +35,7 @@ public class Order {
     @ManyToOne(optional = false)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private List<OrderDetails> orderDetails = new ArrayList<>();
 }
